@@ -185,13 +185,13 @@ class WB3D_Configurator_Public {
 
                     <!-- Pływający przełącznik animacji piaskownicy (uproszczony, na środku na górze viewportu) -->
                     <div id="wb3d-sandbox-anim-toggle" class="wb3d-sandbox-anim-toggle" style="display: none;">
-                        <label class="wb3d-sat-card" for="wb3d-sat-checkbox">
+                        <div class="wb3d-sat-card" id="wb3d-sat-card">
                             <span class="wb3d-sat-label">Otwórz / zamknij</span>
-                            <span class="wb3d-sat-switch">
+                            <label class="wb3d-sat-switch">
                                 <input type="checkbox" id="wb3d-sat-checkbox">
                                 <span class="wb3d-sat-slider"></span>
-                            </span>
-                        </label>
+                            </label>
+                        </div>
                     </div>
                 </model-viewer>
             </div>

@@ -778,6 +778,10 @@ jQuery(document).ready(function($) {
             var anims = viewer.availableAnimations || [];
             if (!anims || anims.length === 0) return;
 
+            if (!viewer.animationName && anims.length > 0) {
+                viewer.animationName = anims[0];
+            }
+
             if (typeof shouldBeClosed === "boolean") {
                 isSandboxClosed = shouldBeClosed;
                 sandboxAnimCounter = isSandboxClosed ? 1 : 0;
@@ -822,6 +826,18 @@ jQuery(document).ready(function($) {
         $container.on('change', '#wb3d-sat-checkbox', function(e) {
             e.stopPropagation();
             setSandboxClosedState($(this).is(':checked'));
+        });
+
+        // Kliknięcie w napis lub tło kapsułki przełącza switch
+        $container.on('click', '.wb3d-sat-card', function(e) {
+            if ($(e.target).closest('.wb3d-sat-switch').length) {
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            var $cb = $container.find('#wb3d-sat-checkbox');
+            var nextState = !$cb.prop('checked');
+            $cb.prop('checked', nextState).trigger('change');
         });
 
         // Obsługa wyboru orientacji placu zabaw (Prawa / Lewa)
