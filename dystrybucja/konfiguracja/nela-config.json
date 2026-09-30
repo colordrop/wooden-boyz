@@ -1,0 +1,280 @@
+{
+  "name": "Wooden Boyz Nela",
+  "glb_url": "/wp-content/colordrop/models/wooden-boyz-nela.glb",
+  "base_price": 2999,
+  "camera_orbit": "-45deg 80deg auto",
+  "camera_target": "0m 1m 0m",
+  "sidebar_title": "Skonfiguruj swój plac zabaw: %name%",
+  "sidebar_subtitle": "Dostosuj wybarwienie drewna, kolory akcesoriów oraz opcje wyposażenia placu zabaw.",
+  "parsed_nodes": [
+    "GRUPA-dodatkowa-belka",
+    "GRUPA-drazek-akrobatyczny",
+    "GRUPA-drazki-gora",
+    "GRUPA-drazki-zamiast",
+    "GRUPA-hustawka-deska",
+    "GRUPA-hustawka-dodatkowa-deska-a",
+    "GRUPA-hustawka-dodatkowa-deska-b",
+    "GRUPA-hustawka-dodatkowa-gniazdo-a",
+    "GRUPA-hustawka-dodatkowa-kubelek-a",
+    "GRUPA-hustawka-dodatkowa-kubelek-b",
+    "GRUPA-hustawka-kubelek",
+    "GRUPA-hustawka-orczyk",
+    "GRUPA-hustawka-trapez",
+    "GRUPA-kamienie",
+    "GRUPA-kamienie-v2-trigger",
+    "GRUPA-nela-balustrada-default",
+    "GRUPA-nela-balustrada-v2",
+    "GRUPA-nela-piaskownica-animacja",
+    "GRUPA-nela-animacja",
+    "GRUPA-nela-piaskownica-bok",
+    "GRUPA-nela-podest",
+    "GRUPA-nela-schody-default",
+    "GRUPA-nela-schody-v2",
+    "GRUPA-porecz-default",
+    "GRUPA-porecz-v2",
+    "GRUPA-zjezdzalnia-default",
+    "GRUPA-zjezdzalnia-v2",
+    "konstrukcja-maja",
+    "lina-wezly",
+    "ruchoma-drabinka",
+    "siatka"
+  ],
+  "active_attributes": [
+    {
+      "id": "drewno-konstrukcja",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "drewno-akcent",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "zdjezdzalnia",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "drazki",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-deseczka",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-kubelek",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-trapez",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-orczyk",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "climb",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "siatka",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    }
+  ],
+  "geometry_toggles": [
+    {
+      "id": 1,
+      "name": "Poręcze schodów",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 199,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-nela-balustrada-default"
+    },
+    {
+      "id": 2,
+      "name": "Pełna ścianka wspinaczkowa",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 299,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-kamienie-v2-trigger"
+    },
+    {
+      "id": 3,
+      "name": "Wyposażenie pod wieżą",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "",
+      "options": [
+        {
+          "label": "Otwarta piaskownica",
+          "value": "brak",
+          "meshId": "",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Podest w miejscu piaskownicy",
+          "value": "podest",
+          "meshId": "GRUPA-nela-podest",
+          "price": 249,
+          "isDefault": false
+        },
+        {
+          "label": "Zamykane włazy piaskownicy",
+          "value": "piaskownica",
+          "meshId": "GRUPA-nela-piaskownica-animacja",
+          "price": 299,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Ściana z drążków w miejscu huśtawki w małpim gaju",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 499,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-drazki-zamiast"
+    },
+    {
+      "id": 6,
+      "name": "Huśtawka w małpim gaju",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "Ściana z drążków w miejscu huśtawki w małpim gaju",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "deska",
+          "meshId": "GRUPA-hustawka-deska",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "kubelek",
+          "meshId": "GRUPA-hustawka-kubelek",
+          "price": 0,
+          "isDefault": false
+        },
+        {
+          "label": "Drążek trapezowy",
+          "value": "trapez",
+          "meshId": "GRUPA-hustawka-trapez",
+          "price": 0,
+          "isDefault": false
+        },
+        {
+          "label": "Orczyk gimnastyczny",
+          "value": "orczyk",
+          "meshId": "GRUPA-hustawka-orczyk",
+          "price": 0,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Zestaw drążków w górnej części małpiego gaju",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 499,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-drazki-gora"
+    },
+    {
+      "id": 8,
+      "name": "Dodatkowa belka z dwoma huśtawkami",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 499,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-dodatkowa-belka"
+    },
+    {
+      "id": 9,
+      "name": "Dodatkowa belka - stanowisko A",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "enableWhen": "Dodatkowa belka z dwoma huśtawkami",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "deska",
+          "meshId": "GRUPA-hustawka-dodatkowa-deska-a",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "kubelek",
+          "meshId": "GRUPA-hustawka-dodatkowa-kubelek-a",
+          "price": 0,
+          "isDefault": false
+        },
+        {
+          "label": "Bocianie gniazdo",
+          "value": "gniazdo",
+          "meshId": "GRUPA-hustawka-dodatkowa-gniazdo-a",
+          "price": 249,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Dodatkowa belka - stanowisko B",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "enableWhen": "Dodatkowa belka z dwoma huśtawkami",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "deska",
+          "meshId": "GRUPA-hustawka-dodatkowa-deska-b",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "kubelek",
+          "meshId": "GRUPA-hustawka-dodatkowa-kubelek-b",
+          "price": 0,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Zestaw kotw",
+      "type": "checkbox",
+      "isCosmetic": true,
+      "price": 299,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": ""
+    }
+  ]
+}

@@ -1,0 +1,2732 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wooden Boyz - Lokalny Tester Modeli 3D</title>
+  <link rel="icon" href="data:,">
+  
+  <!-- Tailwind CSS & FontAwesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- model-viewer library -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, #334155 0%, #0f172a 100%);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+    
+    #ar-button {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #ffffff;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      z-index: 15;
+    }
+    #ar-button:hover {
+      background: #0f172a;
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 14px 28px -4px rgba(0, 0, 0, 0.6);
+      border-color: rgba(245, 158, 11, 0.8);
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+  <!-- Header with Model Switcher -->
+  <header class="bg-slate-900 border-b border-slate-800 py-3.5 px-6 flex justify-between items-center shadow-lg">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-bold text-xl shadow-amber-500/20 shadow-lg">W</div>
+      <div>
+        <h1 class="text-lg font-bold tracking-wide flex items-center gap-2">
+          Lokalny Tester Modeli 3D
+          <span class="text-[11px] font-mono bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-semibold">Live Sandbox</span>
+        </h1>
+        <p class="text-xs text-slate-400">Interaktywny podgląd i walidacja modeli: Aurelia, Gaja (GAIA), Laura i Jasiek</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 text-sm">
+      <button id="header-mirror-btn" onclick="toggleMirrorMode()" title="Przełącz odbicie lustrzane całego placu zabaw" class="flex items-center gap-2 bg-slate-950 hover:bg-slate-900 border border-slate-700/80 px-3.5 py-1.5 rounded-xl shadow-inner text-xs font-semibold text-slate-300 transition cursor-pointer">
+        <i class="fa-solid fa-arrows-left-right text-amber-400"></i>
+        <span>Układ lustrzany:</span>
+        <span id="header-mirror-status" class="font-mono font-bold text-slate-400">WYŁ</span>
+      </button>
+
+      <div class="flex items-center gap-2.5 bg-slate-950 border border-slate-700/80 px-3.5 py-1.5 rounded-xl shadow-inner">
+        <label for="model-switcher" class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-cube text-amber-400"></i> Aktywny model:
+        </label>
+        <select id="model-switcher" onchange="switchCurrentModel(this.value)" class="bg-slate-900 text-amber-300 font-bold text-xs border border-slate-700 rounded-lg px-3 py-1.5 outline-none cursor-pointer focus:border-amber-500">
+          <option value="aurelia" selected>🌟 Plac zabaw Aurelia (Zaktualizowany)</option>
+          <option value="gaja">Plac zabaw Gaja / GAIA</option>
+          <option value="maja">🌟 Plac zabaw Maja (Nowy)</option>
+          <option value="nela">🌟 Plac zabaw Nela (Nowy)</option>
+          <option value="laura">Plac zabaw Laura</option>
+          <option value="jasiek">Plac zabaw Jasiek</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- Left Column: 3D Viewport -->
+    <div class="w-1/2 h-full relative flex flex-col border-r border-slate-800 bg-slate-950">
+      <div class="absolute top-4 left-4 z-10 bg-slate-900/90 backdrop-blur border border-slate-700/50 rounded-lg px-3 py-1.5 text-xs text-slate-300 flex items-center gap-2 shadow-xl">
+        <i class="fa-solid fa-file-code text-amber-400"></i> Model: <span class="font-mono text-amber-200" id="current-model-path-badge">aurelia/wooden-boyz-aurelia.glb</span>
+      </div>
+
+      <div class="flex-1 w-full relative">
+        <!-- Loader Spinner -->
+        <div id="loader" class="absolute inset-0 bg-slate-950/80 z-20 flex flex-col items-center justify-center gap-3 transition-opacity duration-300">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
+          <p class="text-slate-400 text-sm font-medium">Ładowanie silnika i modelu 3D...</p>
+        </div>
+
+        <model-viewer 
+          id="viewer" 
+          src="aurelia/wooden-boyz-aurelia.glb" 
+          bounds="tight"
+          camera-controls 
+          shadow-intensity="0.85" 
+          environment-image="neutral"
+          interaction-prompt="auto"
+          ar
+          ar-modes="webxr scene-viewer quick-look"
+          ar-scale="fixed"
+          min-camera-orbit="auto 35deg auto"
+          max-camera-orbit="auto 95deg auto"
+          touch-action="pan-y"
+          style="width: 100%; height: 100%; touch-action: pan-y;">
+
+          <button slot="ar-button" id="ar-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 16px; height: 16px; fill: currentColor; vertical-align: middle; margin-right: 8px; display: inline-block;"><path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H416c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM224 416a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> Zobacz w AR
+          </button>
+
+          <!-- Floating Sandbox Animation Toggle Switch (Simplified, top-center) -->
+          <div id="sandbox-anim-toggle-wrapper" class="absolute top-4 left-1/2 -translate-x-1/2 z-20 pointer-events-auto transition-all duration-300 whitespace-nowrap" style="display: none;">
+            <label class="bg-slate-900/95 backdrop-blur-md border border-slate-700/80 shadow-2xl rounded-full px-4 py-2 flex items-center gap-3 text-xs hover:border-amber-500/50 transition cursor-pointer select-none" for="sandbox-anim-checkbox">
+              <span class="font-bold text-slate-100 text-xs">Otwórz / zamknij</span>
+              <span class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="sandbox-anim-checkbox" onchange="toggleSandboxAnimation(this.checked)" class="sr-only peer">
+                <div class="w-10 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
+              </span>
+            </label>
+          </div>
+        </model-viewer>
+      </div>
+
+      <!-- Bottom Viewport Controls -->
+      <div class="p-4 bg-slate-900/60 border-t border-slate-800 flex justify-between items-center text-xs">
+        <div class="flex gap-2">
+          <button onclick="changeCameraOrbit('0deg 75deg 5.5m')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded transition">Przód</button>
+          <button onclick="changeCameraOrbit('-90deg 75deg 5.5m')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded transition">Bok</button>
+          <button onclick="changeCameraOrbit('-45deg 45deg 6m')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded transition">Z góry (Izometria)</button>
+          <button id="viewport-mirror-btn" onclick="toggleMirrorMode()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-1.5 rounded transition font-medium flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-left-right text-amber-400"></i>
+            <span>Lustro</span>
+          </button>
+          <button onclick="captureCameraPosition()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded transition font-semibold">
+            <i class="fa-solid fa-camera mr-1"></i> Pobierz pozycję kamery
+          </button>
+        </div>
+        <div class="text-slate-400">
+          <i class="fa-solid fa-circle-info text-amber-500 mr-1"></i> Obracaj myszką, przybliżaj rolką
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Inspector & Configurator Controls -->
+    <div class="w-1/2 h-full flex flex-col bg-slate-900 border-l border-slate-800">
+      
+      <!-- Top Tabs -->
+      <div class="flex border-b border-slate-800 bg-slate-950 px-6 pt-2">
+        <button id="btn-tab-client" onclick="switchTab('tab-client')" class="px-5 py-3 border-b-2 border-amber-500 text-amber-400 font-bold text-sm tracking-wide flex items-center gap-2 bg-slate-900/50 rounded-t-lg transition">
+          <i class="fa-solid fa-sliders"></i> Symulator Konfiguratora Klienta
+        </button>
+        <button id="btn-tab-admin" onclick="switchTab('tab-admin')" class="px-5 py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium text-sm tracking-wide flex items-center gap-2 transition">
+          <i class="fa-brands fa-wordpress"></i> Panel Zarządzania Wariantami (Admin)
+        </button>
+        <button id="btn-tab-inspector" onclick="switchTab('tab-inspector')" class="px-5 py-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium text-sm tracking-wide flex items-center gap-2 transition">
+          <i class="fa-solid fa-sitemap"></i> Struktura Węzłów GLB
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+        
+        <!-- ============================================== -->
+        <!-- TAB 1: CLIENT CONFIGURATOR (SIMULATION) -->
+        <!-- ============================================== -->
+        <div id="tab-client" class="tab-pane space-y-6">
+          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-5 space-y-5">
+            <h3 class="text-base font-bold text-slate-200 border-b border-slate-800 pb-3 flex justify-between items-center">
+              <span id="client-model-title">Konfiguracja Placu Zabaw: Aurelia</span>
+              <span class="text-amber-500 font-mono text-xs">Simulated Client UI</span>
+            </h3>
+
+            <!-- Section 1: Wood Main -->
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">1. Wybarwienie Drewna (Konstrukcja Główna)</span>
+              <div class="flex flex-wrap gap-2.5" id="client-wood-swatches"></div>
+            </div>
+
+            <!-- Section 2: Wood Accent -->
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">2. Wybarwienie Drewna (Akcenty / Barierki)</span>
+              <div class="flex flex-wrap gap-2.5" id="client-wood-accent-swatches"></div>
+            </div>
+
+            <!-- Section 3: Slide Color -->
+            <div class="space-y-3" id="section-slide-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">3. Kolor Zjeżdżalni</span>
+              <div class="flex flex-wrap gap-2.5" id="client-slide-swatches"></div>
+            </div>
+
+            <!-- Section 4A: Swing Deseczka Color -->
+            <div class="space-y-3" id="section-deska-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">4. Kolor Huśtawki (Tradycyjna deseczka)</span>
+              <div class="flex flex-wrap gap-2.5" id="client-deska-swatches"></div>
+            </div>
+
+            <!-- Section 4B: Swing Kubełek Color -->
+            <div class="space-y-3" id="section-kubelek-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">5. Kolor Huśtawki (Kubełek dla malucha)</span>
+              <div class="flex flex-wrap gap-2.5" id="client-kubelek-swatches"></div>
+            </div>
+
+            <!-- Section 4C: Swing Trapez Color -->
+            <div class="space-y-3" id="section-trapez-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">5A. Kolor Drążka Trapezowego</span>
+              <div class="flex flex-wrap gap-2.5" id="client-trapez-swatches"></div>
+            </div>
+
+            <!-- Section 4D: Swing Orczyk Color -->
+            <div class="space-y-3" id="section-orczyk-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">5B. Kolor Orczyka Gimnastycznego</span>
+              <div class="flex flex-wrap gap-2.5" id="client-orczyk-swatches"></div>
+            </div>
+
+            <!-- Section 5C: Gymnastic Bars -->
+            <div class="space-y-3" id="section-drazki-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">5C. Kolor Drążków Gimnastycznych</span>
+              <div class="flex flex-wrap gap-2.5" id="client-drazki-swatches"></div>
+            </div>
+
+            <!-- Section 6: Climbing Stones -->
+            <div class="space-y-3" id="section-climb-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">6. Kamienie Wspinaczkowe</span>
+              <div class="flex flex-wrap gap-2.5" id="client-climb-swatches"></div>
+            </div>
+
+            <!-- Section 6: Rope (Hidden for Aurelia) -->
+            <div class="space-y-3 hidden" id="section-rope-color">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">7. Kolor Lin Wspinaczkowych</span>
+              <div class="flex flex-wrap gap-2.5" id="client-rope-swatches"></div>
+            </div>
+
+            <hr class="border-slate-800">
+
+            <!-- Section: Orientation Select -->
+            <div class="space-y-2" id="section-mirror-layout">
+              <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Orientacja placu zabaw</label>
+              <select id="client-orientation-select" onchange="setMirrorMode(this.value === 'mirrored')" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:border-amber-500 focus:outline-none">
+                <option value="standard" selected>Prawa (standardowa)</option>
+                <option value="mirrored">Lewa (odbicie lustrzane)</option>
+              </select>
+            </div>
+
+            <hr class="border-slate-800">
+
+            <!-- Section 7: Dynamic Geometry Toggles -->
+            <div class="space-y-4">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Wyposażenie i Opcje Konstrukcji</span>
+              <div id="client-toggles-container" class="space-y-3">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <hr class="border-slate-800">
+
+            <!-- Price summary bar -->
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+              <div>
+                <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Szacowana cena zestawu:</span>
+                <span class="text-2xl font-black text-amber-400" id="client-total-price">3 499,00 zł</span>
+              </div>
+              <div class="text-right text-xs text-slate-400 space-y-0.5">
+                <p>Cena bazowa: <span id="client-base-price" class="text-slate-200 font-semibold">3 499,00 zł</span></p>
+                <p>Dodatki: <span id="client-extras-price" class="text-amber-400 font-semibold">0,00 zł</span></p>
+              </div>
+            </div>
+
+            <button onclick="submitMockEnquiry()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-lg transition shadow-lg shadow-emerald-500/10 flex items-center justify-center gap-2 text-sm">
+              <i class="fa-solid fa-paper-plane"></i> Przetestuj podsumowanie konfiguracji i zrzut 3D
+            </button>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: WORDPRESS ADMIN VARIANT MANAGER -->
+        <!-- ============================================== -->
+        <div id="tab-admin" class="tab-pane hidden space-y-6">
+          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-5 space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div>
+                <h3 class="text-base font-bold text-slate-200">Zarządzanie Wariantami Modelu</h3>
+                <p class="text-xs text-slate-400">Konfiguracja węzłów GLB do pokazywania/ukrywania w sklepie</p>
+              </div>
+              <button onclick="generateWPJson()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-file-code"></i> Generuj JSON dla WordPress
+              </button>
+            </div>
+
+            <!-- Active Toggles List -->
+            <div class="space-y-3" id="admin-toggles-list"></div>
+
+            <!-- Exported JSON Area -->
+            <div id="wp-json-export-container" class="hidden space-y-2 pt-3 border-t border-slate-800">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                  <i class="fa-solid fa-code"></i> Wygenerowany JSON dla WordPress:
+                </span>
+                <button onclick="copyWPJsonToClipboard()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1 rounded text-xs transition flex items-center gap-1">
+                  <i class="fa-solid fa-copy"></i> Skopiuj do schowka
+                </button>
+              </div>
+              <textarea id="wp-json-export-area" readonly class="w-full h-48 bg-slate-950 border border-slate-800 rounded p-3 font-mono text-[11px] text-slate-300 focus:outline-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 3: GLB INSPECTOR -->
+        <!-- ============================================== -->
+        <div id="tab-inspector" class="tab-pane hidden space-y-6">
+          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-5 space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div>
+                <h3 class="text-base font-bold text-slate-200">Hierarchia Węzłów i Materiałów</h3>
+                <p class="text-xs text-slate-400">Wszystkie wykryte obiekty i materiały w pliku GLB</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-xs text-slate-400 flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="filter-groups-only" onchange="renderNodeTree()" class="rounded border-slate-700 bg-slate-900 text-amber-500 focus:ring-amber-500">
+                  Tylko elementy "GRUPA-*"
+                </label>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Materiały GLTF (<span id="material-count">0</span>)</span>
+              <div id="material-list" class="grid grid-cols-2 gap-2 text-xs"></div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Węzły sceny (<span id="node-count">0</span>)</span>
+              <div id="node-tree" class="bg-slate-950 border border-slate-800 rounded-xl divide-y divide-slate-800/60 max-h-96 overflow-y-auto custom-scrollbar font-mono text-xs"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulated Receipt Modal -->
+  <div id="receipt-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-6">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl flex flex-col max-h-[85vh] shadow-2xl">
+      <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+        <h3 class="text-base font-bold text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-envelope-open-text text-emerald-500"></i> Podsumowanie konfiguracji (CF7)
+        </h3>
+        <button onclick="closeReceiptModal()" class="text-slate-400 hover:text-slate-200"><i class="fa-solid fa-times text-lg"></i></button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-6 space-y-4 text-xs custom-scrollbar">
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-slate-200 whitespace-pre-wrap leading-relaxed" id="mail-body"></div>
+        <div class="space-y-2">
+          <span class="text-slate-400 font-semibold block uppercase tracking-wider text-[10px]">Wygenerowany zrzut 3D:</span>
+          <div class="bg-slate-950 rounded-lg border border-slate-800 overflow-hidden flex items-center justify-center relative aspect-video">
+            <img id="screenshot-preview" src="" alt="Zrzut ekranu 3D" class="max-h-64 object-contain">
+          </div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex justify-end">
+        <button onclick="closeReceiptModal()" class="bg-slate-800 hover:bg-slate-700 px-5 py-2 rounded-lg text-slate-300 font-semibold transition">Zamknij podgląd</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logic JS -->
+  <script>
+    const viewer = document.getElementById("viewer");
+    let glbScene = null;
+    
+    // Model definitions
+    const MODELS_DATA = {
+      aurelia: {
+        name: "Wooden Boyz Aurelia",
+        path: "aurelia/wooden-boyz-aurelia.glb",
+        basePrice: 3799,
+        cameraOrbit: "-45deg 80deg auto",
+        cameraTarget: "0m 1m 0m",
+        hideRope: true,
+        hasSlide: true,
+        hasKubelek: true,
+        toggles: [
+          {
+                    "id": 1,
+                    "name": "Tymczasowe zamknięcie ścianki wspinaczkowej",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 99,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-aurelia-zamkniecie"
+          },
+          {
+                    "id": 2,
+                    "name": "Poręcz schodów (jednostronna)",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 149,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-aurelia-balustrada"
+          },
+          {
+                    "id": 3,
+                    "name": "Wyposażenie pod wieżą",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Otwarta piaskownica",
+                                        "value": "brak",
+                                        "meshId": "",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Podest w miejscu piaskownicy",
+                                        "value": "podest",
+                                        "meshId": "GRUPA-aurelia-podest",
+                                        "price": 249,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Zamykane włazy piaskownicy",
+                                        "value": "piaskownica",
+                                        "meshId": "",
+                                        "price": 299,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 13,
+                    "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "enableWhen": "Wyposażenie pod wieżą",
+                    "enableWhenValue": "piaskownica",
+                    "nodeDefault": "GRUPA-aurelia-piaskownica",
+                    "nodeActive": "GRUPA-aurelia-piaskownica-zamknieta"
+          },
+          {
+                    "id": 4,
+                    "name": "Huśtawka - stanowisko A",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-deska-a",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-kubelek-a",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Bocianie gniazdo",
+                                        "value": "gniazdo",
+                                        "meshId": "GRUPA-hustawka-gniazdo-a",
+                                        "price": 249,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 5,
+                    "name": "Huśtawka - stanowisko B",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-deska-b",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-kubelek-b",
+                                        "price": 0,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 6,
+                    "name": "Zestaw kotw",
+                    "type": "checkbox",
+                    "isCosmetic": true,
+                    "price": 199,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": ""
+          }
+]
+      },
+      gaja: {
+        name: "Wooden Boyz Gaja",
+        path: "gaja/wooden-boyz-gaja.glb",
+        basePrice: 2399,
+        cameraOrbit: "-45deg 80deg auto",
+        cameraTarget: "0m 1m 0m",
+        hideRope: true,
+        hasSlide: true,
+        hasKubelek: true,
+        toggles: [
+          {
+                    "id": 1,
+                    "name": "Tymczasowe zamknięcie ścianki wspinaczkowej",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 99,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-gaja-zamkniecie"
+          },
+          {
+                    "id": 2,
+                    "name": "Poręcze schodów",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 199,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-gaja-balustrada"
+          },
+          {
+                    "id": 3,
+                    "name": "Wyposażenie pod wieżą",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Otwarta piaskownica",
+                                        "value": "brak",
+                                        "meshId": "",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Podest w miejscu piaskownicy",
+                                        "value": "podest",
+                                        "meshId": "GRUPA-gaja-podest",
+                                        "price": 249,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Zamykane włazy piaskownicy",
+                                        "value": "piaskownica",
+                                        "meshId": "",
+                                        "price": 299,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 13,
+                    "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "enableWhen": "Wyposażenie pod wieżą",
+                    "enableWhenValue": "piaskownica",
+                    "nodeDefault": "GRUPA-gaja-piaskownica",
+                    "nodeActive": "GRUPA-gaja-piaskownica-zamknieta"
+          },
+          {
+                    "id": 4,
+                    "name": "Huśtawka - stanowisko A",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-deska-a-001",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-kubelek001-a",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Bocianie gniazdo",
+                                        "value": "gniazdo",
+                                        "meshId": "GRUPA-hustawka-gniazdo-a-001",
+                                        "price": 249,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 5,
+                    "name": "Huśtawka - stanowisko B",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-deska-b.001",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-kubelek001-b",
+                                        "price": 0,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 6,
+                    "name": "Zestaw kotw",
+                    "type": "checkbox",
+                    "isCosmetic": true,
+                    "price": 199,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": ""
+          }
+]
+      },
+      maja: {
+        name: "Wooden Boyz Maja",
+        path: "maja/wooden-boyz-maja.glb",
+        basePrice: 3599,
+        cameraOrbit: "-45deg 80deg auto",
+        cameraTarget: "0m 1m 0m",
+        hideRope: true,
+        hasSlide: true,
+        hasKubelek: true,
+        toggles: [
+          {
+                    "id": 1,
+                    "name": "Jednostronna poręcz schodów",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 149,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-maja-balustrada"
+          },
+          {
+                    "id": 2,
+                    "name": "Wyposażenie pod wieżą",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Otwarta piaskownica",
+                                        "value": "brak",
+                                        "meshId": "",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Podest w miejscu piaskownicy",
+                                        "value": "podest",
+                                        "meshId": "GRUPA-maja-podest",
+                                        "price": 249,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Zamykane włazy piaskownicy",
+                                        "value": "piaskownica",
+                                        "meshId": "",
+                                        "price": 299,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 3,
+                    "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "enableWhen": "Wyposażenie pod wieżą",
+                    "enableWhenValue": "piaskownica",
+                    "nodeDefault": "GRUPA-maja-piaskownica",
+                    "nodeActive": "GRUPA-maja-piaskownica-zamknieta"
+          },
+          {
+                    "id": 4,
+                    "name": "Huśtawka - stanowisko A",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-deska-a",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-kubelek-a",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Bocianie gniazdo",
+                                        "value": "gniazdo",
+                                        "meshId": "GRUPA-hustawka-gniazdo-a",
+                                        "price": 249,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 5,
+                    "name": "Huśtawka - stanowisko B",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-deska-b",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-kubelek-b",
+                                        "price": 0,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 6,
+                    "name": "Zestaw kotw",
+                    "type": "checkbox",
+                    "isCosmetic": true,
+                    "price": 149,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": ""
+          }
+]
+      },
+      laura: {
+        name: "Wooden Boyz Laura",
+        path: "laura/wooden-boyz-laura.glb",
+        basePrice: 2399,
+        cameraOrbit: "-45deg 92deg auto",
+        cameraTarget: "0m auto 0m",
+        hideRope: false,
+        hasSlide: false,
+        hasKubelek: true,
+        hasDrazki: true,
+        toggles: [
+          {
+                    "id": 1783350226545,
+                    "name": "Zestaw dodatkowych kotw",
+                    "type": "checkbox",
+                    "isCosmetic": true,
+                    "price": 149,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": ""
+          },
+          {
+                    "id": 1,
+                    "name": "Pionowa ścianka z drążków zamiast huśtawki",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 499,
+                    "disableWhen": "",
+                    "nodeDefault": "GRUPA-hustawka-deska",
+                    "nodeActive": "GRUPA-drazki-zamiast"
+          },
+          {
+                    "id": 2,
+                    "name": "Podwójna ilość kamieni do wspinaczki",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 299,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-kamienie-ekstra"
+          },
+          {
+                    "id": 3,
+                    "name": "Rodzaj huśtawki",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "Pionowa ścianka z drążków zamiast huśtawki",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "tradycyjna-deseczka",
+                                        "meshId": "GRUPA-hustawka-deska",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Drążek trapezowy",
+                                        "value": "dr--ek-trapezowy",
+                                        "meshId": "GRUPA-hustawka-trapez",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Orczyk gimnastyczny",
+                                        "value": "orczyk-gimnastyczny",
+                                        "meshId": "GRUPA-hustawka-orczyk",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "hu-tawka-kube-kowa",
+                                        "meshId": "GRUPA-hustawka-kubelek",
+                                        "price": 0,
+                                        "isDefault": false
+                              }
+                    ]
+          }
+]
+      },
+      jasiek: {
+        name: "Wooden Boyz Jasiek",
+        path: "jasiek/wooden-boyz-jasiek.glb",
+        basePrice: 3999,
+        cameraOrbit: "-45deg 92deg auto",
+        cameraTarget: "0m auto 0m",
+        hideRope: false,
+        hasSlide: false,
+        hasKubelek: true,
+        hasDrazki: true,
+        toggles: [
+          {
+                    "id": 1783350226545,
+                    "name": "Zestaw dodatkowych kotw",
+                    "type": "checkbox",
+                    "isCosmetic": true,
+                    "price": 149,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": ""
+          },
+          {
+                    "id": 1,
+                    "name": "Pionowa ścianka z drążków zamiast huśtawki przy ściance",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 499,
+                    "disableWhen": "",
+                    "nodeDefault": "GRUPA-hustawka-deska001",
+                    "nodeActive": "GRUPA-drazki-zamiast"
+          },
+          {
+                    "id": 2,
+                    "name": "Podwójna ilość kamieni do wspinaczki",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 299,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-kamienie-ekstra"
+          },
+          {
+                    "id": 3,
+                    "name": "Rodzaj huśtawki",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "tradycyjna-deseczka",
+                                        "meshId": "GRUPA-hustawka-deska",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Drążek trapezowy",
+                                        "value": "dr--ek-trapezowy",
+                                        "meshId": "GRUPA-hustawka-trapez",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Orczyk gimnastyczny",
+                                        "value": "orczyk-gimnastyczny",
+                                        "meshId": "GRUPA-hustawka-orczyk",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "hu-tawka-kube-kowa",
+                                        "meshId": "GRUPA-hustawka-kubelek",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Bocianie gniazdo",
+                                        "value": "gniazdo",
+                                        "meshId": "GRUPA-hustawka-gniazdo",
+                                        "price": 249,
+                                        "isDefault": false
+                              }
+                    ]
+          }
+]
+      },
+      nela: {
+        name: "Wooden Boyz Nela",
+        path: "nela/wooden-boyz-nela.glb",
+        basePrice: 2999,
+        cameraOrbit: "-45deg 80deg auto",
+        cameraTarget: "0m 1m 0m",
+        hideRope: false,
+        hasSlide: true,
+        hasKubelek: true,
+        hasDrazki: true,
+        toggles: [
+          {
+                    "id": 1,
+                    "name": "Poręcze schodów",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 199,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-nela-balustrada-default"
+          },
+          {
+                    "id": 2,
+                    "name": "Pełna ścianka wspinaczkowa",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 299,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-kamienie-v2-trigger"
+          },
+          {
+                    "id": 3,
+                    "name": "Wyposażenie pod wieżą",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "",
+                    "options": [
+                              {
+                                        "label": "Otwarta piaskownica",
+                                        "value": "brak",
+                                        "meshId": "",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Podest w miejscu piaskownicy",
+                                        "value": "podest",
+                                        "meshId": "GRUPA-nela-podest",
+                                        "price": 249,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Zamykane włazy piaskownicy",
+                                        "value": "piaskownica",
+                                        "meshId": "GRUPA-nela-piaskownica-animacja",
+                                        "price": 299,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 5,
+                    "name": "Ściana z drążków w miejscu huśtawki w małpim gaju",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 499,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-drazki-zamiast"
+          },
+          {
+                    "id": 6,
+                    "name": "Huśtawka w małpim gaju",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "disableWhen": "Ściana z drążków w miejscu huśtawki w małpim gaju",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-deska",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-kubelek",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Drążek trapezowy",
+                                        "value": "trapez",
+                                        "meshId": "GRUPA-hustawka-trapez",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Orczyk gimnastyczny",
+                                        "value": "orczyk",
+                                        "meshId": "GRUPA-hustawka-orczyk",
+                                        "price": 0,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 7,
+                    "name": "Zestaw drążków w górnej części małpiego gaju",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 499,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-drazki-gora"
+          },
+          {
+                    "id": 8,
+                    "name": "Dodatkowa belka z dwoma huśtawkami",
+                    "type": "checkbox",
+                    "isCosmetic": false,
+                    "price": 499,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": "GRUPA-dodatkowa-belka"
+          },
+          {
+                    "id": 9,
+                    "name": "Dodatkowa belka - stanowisko A",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "enableWhen": "Dodatkowa belka z dwoma huśtawkami",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-dodatkowa-deska-a",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-dodatkowa-kubelek-a",
+                                        "price": 0,
+                                        "isDefault": false
+                              },
+                              {
+                                        "label": "Bocianie gniazdo",
+                                        "value": "gniazdo",
+                                        "meshId": "GRUPA-hustawka-dodatkowa-gniazdo-a",
+                                        "price": 249,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 10,
+                    "name": "Dodatkowa belka - stanowisko B",
+                    "type": "select",
+                    "isCosmetic": false,
+                    "price": 0,
+                    "enableWhen": "Dodatkowa belka z dwoma huśtawkami",
+                    "options": [
+                              {
+                                        "label": "Tradycyjna deseczka",
+                                        "value": "deska",
+                                        "meshId": "GRUPA-hustawka-dodatkowa-deska-b",
+                                        "price": 0,
+                                        "isDefault": true
+                              },
+                              {
+                                        "label": "Huśtawka kubełkowa",
+                                        "value": "kubelek",
+                                        "meshId": "GRUPA-hustawka-dodatkowa-kubelek-b",
+                                        "price": 0,
+                                        "isDefault": false
+                              }
+                    ]
+          },
+          {
+                    "id": 11,
+                    "name": "Zestaw kotw",
+                    "type": "checkbox",
+                    "isCosmetic": true,
+                    "price": 299,
+                    "disableWhen": "",
+                    "nodeDefault": "",
+                    "nodeActive": ""
+          }
+]
+      }
+    };
+
+    let currentModelKey = "aurelia";
+    let activeToggles = [];
+    let basePrice = 3499;
+    
+    const clientState = {
+      woodMain: "Antracyt Szary",
+      woodAccent: "Teak",
+      slide: "Czerwony",
+      deska: "Czerwony",
+      kubelek: "Czerwony",
+      trapez: "Czerwony",
+      orczyk: "Czerwony",
+      drazki: "Antracyt",
+      climb: "Mix",
+      rope: "Naturalna",
+      toggles: {},
+      isMirrored: false
+    };
+
+    // Textures & Swatches matching production WordPress
+    const woodTexturePaths = {
+      "Śnieg Północy (biały)": "textures/r01.jpg",
+      "Teak": "textures/r02.jpg",
+      "Mahoń": "textures/r03.jpg",
+      "Złoty Dąb": "textures/r04.jpg",
+      "Sekwoja": "textures/r05.jpg",
+      "Dąb Ciemny": "textures/r06.jpg",
+      "Palisander": "textures/r07.jpg",
+      "Palisander Ciemny": "textures/r08.jpg",
+      "Antracyt Szary": "textures/r09.jpg",
+      "Noc Polarna (czarny)": "textures/r10.jpg",
+      "Sosna Naturalna": "textures/r11.jpg"
+    };
+
+    const ropeTexturePaths = {
+      "Naturalna": "textures/rope-1.jpg",
+      "Czerwona": "textures/rope-2.jpg",
+      "Niebieska": "textures/rope-3.jpg"
+    };
+
+    const climbTexturePaths = {
+      "Mix": "textures/climb-01.jpg",
+      "Czarne": "textures/climb-02.jpg",
+      "Antracyt": "textures/climb-03.jpg"
+    };
+
+    const plasticColors = {
+      "Czerwony": "#e61b1f",
+      "Niebieski": "#085ba9",
+      "Zielony": "#00613c",
+      "Różowy": "#d03d61",
+      "Żółty": "#f2cb02",
+      "Limonkowy": "#bfd12d",
+      "Antracyt": "#484c4f"
+    };
+
+    const trapezColors = {
+      "Czerwony": "#e61b1f",
+      "Niebieski": "#085ba9"
+    };
+
+    const orczykColors = {
+      "Czerwony": "#e61b1f",
+      "Niebieski": "#085ba9",
+      "Zielony": "#094d00"
+    };
+
+    const drazkiColors = {
+      "Antracyt": "#484c4f",
+      "Czerwony": "#e61b1f",
+      "Niebieski": "#085ba9"
+    };
+
+    function getScene(modelViewer) {
+      const sceneSym = Object.getOwnPropertySymbols(modelViewer).find(
+        (x) => x.description === 'scene'
+      );
+      return sceneSym ? modelViewer[sceneSym] : null;
+    }
+
+    function setMirrorMode(enable) {
+      if (clientState.isMirrored === !!enable) return;
+      clientState.isMirrored = !!enable;
+      applyMirrorTransform(true);
+      updateMirrorUI();
+    }
+
+    function toggleMirrorMode() {
+      setMirrorMode(!clientState.isMirrored);
+    }
+
+    function centerCameraOnModel(modelViewer) {
+      if (!modelViewer) return;
+
+      let cx = 0;
+      let cy = 1.0;
+      let cz = 0;
+      let centerFound = false;
+
+      // 1. Sprawdź natywną funkcję getBoundingBoxCenter() z model-viewer (uwzględnia skalę i aktualne odbicie w scenie)
+      if (typeof modelViewer.getBoundingBoxCenter === 'function') {
+        try {
+          const center = modelViewer.getBoundingBoxCenter();
+          if (center && typeof center.x === 'number' && !isNaN(center.x)) {
+            cx = center.x;
+            cy = Math.max(0.8, center.y);
+            cz = center.z;
+            centerFound = true;
+          }
+        } catch (e) {
+          console.warn("getBoundingBoxCenter warning:", e);
+        }
+      }
+
+      // 2. Fallback do Three.js scene.boundingBox
+      if (!centerFound) {
+        const scene = getScene(modelViewer);
+        if (scene && scene.boundingBox && !scene.boundingBox.isEmpty()) {
+          const bb = scene.boundingBox;
+          cx = (bb.min.x + bb.max.x) / 2;
+          cy = Math.max(0.8, (bb.min.y + bb.max.y) / 2);
+          cz = (bb.min.z + bb.max.z) / 2;
+          centerFound = true;
+        }
+      }
+
+      if (centerFound) {
+        modelViewer.cameraTarget = `${cx.toFixed(2)}m ${cy.toFixed(2)}m ${cz.toFixed(2)}m`;
+      }
+    }
+
+    let lastAppliedMirrorState = false;
+
+    async function applyMirrorTransform(isToggle = false) {
+      if (!viewer) return;
+      const isMir = !!clientState.isMirrored;
+      const scaleStr = isMir ? "-1 1 1" : "1 1 1";
+      viewer.setAttribute("scale", scaleStr);
+      viewer.scale = scaleStr;
+
+      // Sferyczne odwrócenie kąta azymutu kamery (theta) TYLKO gdy stan lustra faktycznie uległ zmianie
+      if (isToggle || isMir !== lastAppliedMirrorState) {
+        if (typeof viewer.getCameraOrbit === 'function') {
+          try {
+            const currentOrbit = viewer.getCameraOrbit();
+            if (currentOrbit && typeof currentOrbit.theta === 'number') {
+              const currentThetaDeg = currentOrbit.theta * 180 / Math.PI;
+              const currentPhiDeg = currentOrbit.phi * 180 / Math.PI;
+              const radiusM = currentOrbit.radius;
+              viewer.cameraOrbit = `${(-currentThetaDeg).toFixed(1)}deg ${currentPhiDeg.toFixed(1)}deg ${radiusM.toFixed(2)}m`;
+            }
+          } catch (e) {}
+        }
+        lastAppliedMirrorState = isMir;
+      }
+
+      // Poczekaj na asynchroniczne przeliczenie skali i bounding boxa przez model-viewer
+      if (viewer.updateComplete) {
+        await viewer.updateComplete;
+      }
+
+      // Wycentruj punkt skupienia kamery na odbitym modelu
+      centerCameraOnModel(viewer);
+
+      forceViewerRerender(viewer);
+    }
+
+    function updateMirrorUI() {
+      const isMir = !!clientState.isMirrored;
+
+      // 1. Header status
+      const headerStatus = document.getElementById("header-mirror-status");
+      const headerBtn = document.getElementById("header-mirror-btn");
+      if (headerStatus) {
+        headerStatus.innerText = isMir ? "WŁ (LUSTRO)" : "WYŁ";
+        headerStatus.className = isMir ? "font-mono font-bold text-amber-400" : "font-mono font-bold text-slate-400";
+      }
+      if (headerBtn) {
+        if (isMir) {
+          headerBtn.classList.add("border-amber-500/60", "bg-amber-500/10");
+        } else {
+          headerBtn.classList.remove("border-amber-500/60", "bg-amber-500/10");
+        }
+      }
+
+      // 2. Viewport button
+      const vpBtn = document.getElementById("viewport-mirror-btn");
+      if (vpBtn) {
+        if (isMir) {
+          vpBtn.className = "bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded transition font-medium flex items-center gap-1.5 cursor-pointer shadow-sm";
+        } else {
+          vpBtn.className = "bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-1.5 rounded transition font-medium flex items-center gap-1.5 cursor-pointer";
+        }
+      }
+
+      // 3. Tab 1 orientation select
+      const orientSelect = document.getElementById("client-orientation-select");
+      if (orientSelect) {
+        orientSelect.value = isMir ? "mirrored" : "standard";
+      }
+    }
+
+    function switchCurrentModel(modelKey) {
+      if (!MODELS_DATA[modelKey]) return;
+      currentModelKey = modelKey;
+      const modelDef = MODELS_DATA[modelKey];
+      
+      document.getElementById("loader").style.display = "flex";
+      document.getElementById("loader").classList.remove("opacity-0");
+      
+      document.getElementById("current-model-path-badge").innerText = modelDef.path;
+      document.getElementById("client-model-title").innerText = "Konfiguracja: " + modelDef.name;
+      
+      basePrice = modelDef.basePrice;
+      activeToggles = JSON.parse(JSON.stringify(modelDef.toggles));
+      clientState.toggles = {};
+      activeToggles.forEach(tog => {
+        if (tog.type === 'select') {
+          const defOpt = tog.options.find(o => o.isDefault) || tog.options[0];
+          clientState.toggles[tog.name] = defOpt ? defOpt.value : "";
+        } else if (tog.type === 'checkbox') {
+          clientState.toggles[tog.name] = false;
+        }
+      });
+
+      resetSandboxAnimation();
+      const animToggleWrapper = document.getElementById("sandbox-anim-toggle-wrapper");
+      if (animToggleWrapper) animToggleWrapper.style.display = "none";
+
+      // Hide rope section if requested
+      const ropeSec = document.getElementById("section-rope-color");
+      if (ropeSec) {
+        ropeSec.classList.toggle("hidden", !!modelDef.hideRope);
+      }
+
+      // Hide/show slide section
+      const slideSec = document.getElementById("section-slide-color");
+      if (slideSec) {
+        slideSec.classList.toggle("hidden", !modelDef.hasSlide);
+      }
+
+      // Hide/show drazki section
+      const drazkiSec = document.getElementById("section-drazki-color");
+      if (drazkiSec) {
+        drazkiSec.style.display = modelDef.hasDrazki ? "block" : "none";
+      }
+
+      // Kubelek & Deska sections are dynamically handled in applyAllGeometryStates
+      const kubelekSec = document.getElementById("section-kubelek-color");
+      if (kubelekSec) {
+        kubelekSec.classList.remove("hidden");
+      }
+      
+      refreshClientUI();
+
+      viewer.src = modelDef.path;
+      if (modelDef.cameraOrbit) {
+        let initOrbit = modelDef.cameraOrbit;
+        if (clientState.isMirrored) {
+          const parts = initOrbit.split(" ");
+          if (parts.length >= 1 && parts[0].includes("deg")) {
+            const deg = parseFloat(parts[0]);
+            if (!isNaN(deg)) {
+              parts[0] = `${-deg}deg`;
+              initOrbit = parts.join(" ");
+            }
+          }
+        }
+        viewer.cameraOrbit = initOrbit;
+      }
+      if (modelDef.cameraTarget) {
+        let initTarget = modelDef.cameraTarget;
+        if (clientState.isMirrored) {
+          const parts = initTarget.split(" ");
+          if (parts.length >= 1 && parts[0].includes("m")) {
+            const xVal = parseFloat(parts[0]);
+            if (!isNaN(xVal)) {
+              parts[0] = `${(-xVal).toFixed(2)}m`;
+              initTarget = parts.join(" ");
+            }
+          }
+        }
+        viewer.cameraTarget = initTarget;
+      }
+      updateMirrorUI();
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.add("hidden"));
+      document.getElementById(tabId).classList.remove("hidden");
+      
+      document.querySelectorAll("[id^='btn-tab-']").forEach(btn => {
+        btn.classList.remove("border-amber-500", "text-amber-400", "bg-slate-900/50");
+        btn.classList.add("border-transparent", "text-slate-400");
+      });
+      
+      const activeBtn = document.getElementById("btn-" + tabId);
+      activeBtn.classList.add("border-amber-500", "text-amber-400", "bg-slate-900/50");
+      activeBtn.classList.remove("border-transparent", "text-slate-400");
+    }
+
+    function changeCameraOrbit(orbit) {
+      let finalOrbit = orbit;
+      if (clientState.isMirrored) {
+        const parts = orbit.split(" ");
+        if (parts.length >= 1 && parts[0].includes("deg")) {
+          const deg = parseFloat(parts[0]);
+          if (!isNaN(deg)) {
+            parts[0] = `${-deg}deg`;
+            finalOrbit = parts.join(" ");
+          }
+        }
+      }
+      viewer.cameraOrbit = finalOrbit;
+      centerCameraOnModel(viewer);
+    }
+
+    function captureCameraPosition() {
+      if (!viewer) return;
+      const orbit = viewer.getCameraOrbit();
+      const target = viewer.getCameraTarget();
+      const orbitStr = `${Math.round(orbit.theta * 180 / Math.PI)}deg ${Math.round(orbit.phi * 180 / Math.PI)}deg ${orbit.radius.toFixed(2)}m`;
+      const targetStr = `${target.x.toFixed(2)}m ${target.y.toFixed(2)}m ${target.z.toFixed(2)}m`;
+      alert("Pozycja kamery:\nOrbit: " + orbitStr + "\nTarget: " + targetStr);
+    }
+
+    viewer.addEventListener("finished", () => {
+      viewer.pause();
+    });
+
+    viewer.addEventListener("load", () => {
+      console.log("3D Model successfully loaded:", currentModelKey);
+      resetSandboxAnimation();
+      document.getElementById("loader").classList.add("opacity-0");
+      setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+      }, 300);
+
+      glbScene = getScene(viewer);
+      
+      populateInspector();
+      
+      if (activeToggles.length === 0 && MODELS_DATA[currentModelKey]) {
+        activeToggles = JSON.parse(JSON.stringify(MODELS_DATA[currentModelKey].toggles));
+      }
+      
+      activeToggles.forEach(tog => {
+        if (tog.type === "checkbox") {
+          clientState.toggles[tog.name] = false;
+        } else if (tog.type === "select") {
+          const def = tog.options.find(o => o.isDefault) || tog.options[0];
+          clientState.toggles[tog.name] = def ? def.value : "";
+        }
+      });
+
+      applyAllGeometryStates();
+      setTimeout(() => applyAllGeometryStates(), 150);
+      refreshAdminTogglesList();
+      refreshClientUI();
+
+      applyMirrorTransform();
+      updateMirrorUI();
+
+      // Apply initial materials
+      applyWoodMainTexture(woodTexturePaths[clientState.woodMain]);
+      applyWoodAccentTexture(woodTexturePaths[clientState.woodAccent]);
+      applySlideColor(plasticColors[clientState.slide]);
+      applyDeskaColor(plasticColors[clientState.deska]);
+      applyKubelekColor(plasticColors[clientState.kubelek]);
+      applyTrapezColor(trapezColors[clientState.trapez] || plasticColors[clientState.trapez]);
+      applyOrczykColor(orczykColors[clientState.orczyk] || plasticColors[clientState.orczyk]);
+      applyDrazkiColor(drazkiColors[clientState.drazki] || "#484c4f");
+      applyClimbTexture(climbTexturePaths[clientState.climb]);
+      if (!MODELS_DATA[currentModelKey].hideRope) {
+        applyRopeTexture(ropeTexturePaths[clientState.rope]);
+      }
+    });
+
+    function getFilteredGLBNodes() {
+      if (!glbScene) return [];
+      const list = [];
+      glbScene.traverse(child => {
+        if (child.name && child.name.trim() !== '' && !child.name.startsWith('OSG_')) {
+          list.push(child.name);
+        }
+      });
+      return [...new Set(list)].sort();
+    }
+
+    function populateInspector() {
+      const materials = viewer.model ? viewer.model.materials : [];
+      document.getElementById("material-count").innerText = materials.length;
+      
+      const matListContainer = document.getElementById("material-list");
+      matListContainer.innerHTML = "";
+      
+      materials.forEach((mat, idx) => {
+        const matDiv = document.createElement("div");
+        matDiv.className = "bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center";
+        
+        const color = mat.pbrMetallicRoughness ? mat.pbrMetallicRoughness.baseColorFactor : [1,1,1,1];
+        const colorHex = rgbToHex(color[0], color[1], color[2]);
+        
+        matDiv.innerHTML = `
+          <div class="overflow-hidden">
+            <span class="font-semibold text-slate-300 block truncate" title="${mat.name}">${mat.name || 'Unnamed'}</span>
+            <span class="text-[10px] text-slate-500 font-mono">${colorHex}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="color" value="${colorHex}" onchange="changeMaterialColor(${idx}, this.value)" class="w-6 h-6 border-0 bg-transparent cursor-pointer rounded">
+          </div>
+        `;
+        matListContainer.appendChild(matDiv);
+      });
+
+      renderNodeTree();
+    }
+
+    function renderNodeTree() {
+      const treeContainer = document.getElementById("node-tree");
+      treeContainer.innerHTML = "";
+      
+      const nodes = getFilteredGLBNodes();
+      const filterGroupsOnly = document.getElementById("filter-groups-only").checked;
+      
+      let filteredNodes = nodes;
+      if (filterGroupsOnly) {
+        filteredNodes = nodes.filter(n => n.toLowerCase().startsWith("grupa-"));
+      }
+
+      document.getElementById("node-count").innerText = filteredNodes.length;
+
+      filteredNodes.forEach(nodeName => {
+        const row = document.createElement("div");
+        row.className = "flex justify-between items-center py-2 px-3 text-xs hover:bg-slate-800/40 transition";
+        
+        let isVisible = true;
+        if (glbScene) {
+          glbScene.traverse(obj => {
+            if (obj.name === nodeName) isVisible = obj.visible;
+          });
+        }
+        
+        row.innerHTML = `
+          <span class="font-mono text-slate-300 font-medium truncate w-3/4 flex items-center gap-1.5" title="${nodeName}">
+            <i class="fa-solid fa-cube text-slate-500 text-[10px]"></i> ${nodeName}
+          </span>
+          <div class="flex gap-2">
+            <button onclick="flashNode('${nodeName}')" class="text-slate-400 hover:text-amber-400 p-1" title="Mignij/Zidentyfikuj">
+              <i class="fa-regular fa-lightbulb"></i>
+            </button>
+            <button onclick="toggleNodeVisibilityBtn('${nodeName}', this)" class="text-slate-400 hover:text-slate-200 p-1" title="Ukryj/Pokaż">
+              <i class="fa-solid ${isVisible ? 'fa-eye text-emerald-400' : 'fa-eye-slash text-slate-600'}"></i>
+            </button>
+          </div>
+        `;
+        treeContainer.appendChild(row);
+      });
+    }
+
+    function flashNode(nodeName) {
+      if (!glbScene) return;
+      let target = null;
+      glbScene.traverse(obj => {
+        if (obj.name === nodeName) target = obj;
+      });
+      if (target) {
+        const orig = target.visible;
+        let count = 0;
+        const interval = setInterval(() => {
+          target.visible = !target.visible;
+          count++;
+          forceViewerRerender(viewer);
+          if (count > 5) {
+            clearInterval(interval);
+            target.visible = orig;
+            forceViewerRerender(viewer);
+          }
+        }, 120);
+      }
+    }
+
+    function toggleNodeVisibilityBtn(nodeName, btn) {
+      if (!glbScene) return;
+      let newVis = false;
+      glbScene.traverse(obj => {
+        if (obj.name === nodeName) {
+          obj.visible = !obj.visible;
+          newVis = obj.visible;
+        }
+      });
+      btn.innerHTML = `<i class="fa-solid ${newVis ? 'fa-eye text-emerald-400' : 'fa-eye-slash text-slate-600'}"></i>`;
+      forceViewerRerender(viewer);
+    }
+
+    function setNodeVisibilityDirect(nodeName, isVisible) {
+      if (!glbScene || !nodeName) return;
+      var cleanTarget = nodeName.replace(/\./g, '').toLowerCase().trim();
+      var nodeNameLower = nodeName.toLowerCase().trim();
+      var baseTarget = nodeNameLower.replace(/\.\d+$/, '');
+      glbScene.traverse(function(obj) {
+        if (!obj.name) return;
+        var objNameLower = obj.name.toLowerCase().trim();
+        var cleanObjName = obj.name.replace(/\./g, '').toLowerCase().trim();
+        var baseObj = objNameLower.replace(/\.\d+$/, '');
+        if (objNameLower === nodeNameLower || cleanObjName === cleanTarget || baseObj === baseTarget) {
+          obj.visible = isVisible;
+        }
+      });
+      if (cleanTarget.includes('piaskownica-animacja') || cleanTarget.includes('nela-animacja')) {
+        glbScene.traverse(function(obj) {
+          if (!obj.name) return;
+          var n = obj.name.toLowerCase();
+          if (n.includes('piaskownica-animacja') || n.includes('nela-animacja')) {
+            obj.visible = isVisible;
+          }
+        });
+      }
+    }
+
+    function forceViewerRerender(modelViewer) {
+      if (!modelViewer) return;
+
+      const scene = getScene(modelViewer);
+      if (scene) {
+        if (typeof scene.updateBoundingBox === 'function') {
+          scene.updateBoundingBox();
+        }
+        if (typeof scene.updateShadow === 'function') {
+          scene.updateShadow();
+        }
+        if (scene.shadow) {
+          scene.shadow.needsUpdate = true;
+        }
+
+        // Dynamiczne centrowanie kamery na widocznej geometrii (uwzględnia skalę i odbicie lustrzane)
+        centerCameraOnModel(modelViewer);
+
+        if (typeof modelViewer.updateFraming === 'function') {
+          modelViewer.updateFraming();
+        } else if (typeof scene.updateFraming === 'function') {
+          scene.updateFraming();
+        }
+
+        if (typeof scene.queueRender === 'function') {
+          scene.queueRender();
+        }
+      }
+
+      const currentExp = parseFloat(modelViewer.getAttribute('exposure') || '1.0');
+      const newExp = currentExp === 1.0 ? '1.0001' : '1.0';
+      modelViewer.setAttribute('exposure', newExp);
+
+      const needsRenderSym = Object.getOwnPropertySymbols(modelViewer).find(s => s.description === 'needsRender');
+      if (needsRenderSym && typeof modelViewer[needsRenderSym] === 'function') {
+        modelViewer[needsRenderSym]();
+      }
+      if (typeof modelViewer.requestUpdate === 'function') {
+        modelViewer.requestUpdate();
+      }
+    }
+
+    // Geometry State Rebuilder (1:1 z produkcyjnej wtyczki WP)
+    function applyAllGeometryStates() {
+      if (!glbScene) return;
+
+      // 1. Zbierz informacje o tym, które warianty są aktualnie włączone
+      var activeStates = {};
+      activeToggles.forEach(function(tog) {
+        if (tog.type === 'checkbox') {
+          activeStates[tog.name] = clientState.toggles[tog.name] === true;
+        } else {
+          activeStates[tog.name] = clientState.toggles[tog.name];
+        }
+      });
+
+      var disabledToggles = {};
+      activeToggles.forEach(function(tog) {
+        var isDisabled = false;
+        if (tog.disableWhen) {
+          var dw = tog.disableWhen.trim();
+          isDisabled = activeStates[tog.disableWhen] === true || activeStates[dw] === true;
+        }
+        if (tog.enableWhen) {
+          var ew = tog.enableWhen.trim();
+          var parentTog = activeToggles.find(function(t) {
+            return (t.name || '').trim() === ew || t.name === tog.enableWhen;
+          });
+          var parentVal = activeStates[tog.enableWhen] !== undefined ? activeStates[tog.enableWhen] : activeStates[ew];
+          if (tog.enableWhenValue !== undefined && tog.enableWhenValue !== "") {
+            var targetVal = (tog.enableWhenValue || '').toLowerCase().trim();
+            var parentValStr = (parentVal || '').toString().toLowerCase().trim();
+            var parentOpt = parentTog && parentTog.options ? parentTog.options.find(function(o) {
+              return (o.value || '').toLowerCase() === parentValStr;
+            }) : null;
+            var parentLabelStr = parentOpt ? (parentOpt.label || '').toLowerCase().trim() : '';
+
+            var isMatch = false;
+            if (parentValStr === targetVal) {
+              isMatch = true;
+            } else if (targetVal === 'piaskownica' || targetVal.indexOf('zamykane') !== -1) {
+              isMatch = parentValStr === 'piaskownica' || 
+                        parentValStr.indexOf('zamykane') !== -1 || 
+                        parentLabelStr.indexOf('zamykane') !== -1;
+            } else if (targetVal) {
+              isMatch = parentValStr.indexOf(targetVal) !== -1;
+            }
+            isDisabled = !isMatch;
+          } else {
+            isDisabled = parentVal !== true;
+          }
+        }
+        if (isDisabled) {
+          disabledToggles[tog.name] = true;
+          disabledToggles[(tog.name || '').trim()] = true;
+        }
+      });
+
+      // 3. Aplikuj stany widoczności 3D oraz włącz/wyłącz kontrolki w HTML
+      activeToggles.forEach(function(tog) {
+        var isDisabled = disabledToggles[tog.name] === true;
+
+        // Aktualizacja blokady i wyszarzenia w UI
+        var parentCard = Array.from(document.querySelectorAll('.geo-toggle-card')).find(function(c) {
+          return c.getAttribute('data-card-tog-name') === tog.name;
+        });
+        if (parentCard) {
+          var inputEl = parentCard.querySelector('input, select');
+          if (inputEl) inputEl.disabled = isDisabled;
+
+          if (tog.enableWhen) {
+            parentCard.style.display = isDisabled ? 'none' : 'flex';
+          } else {
+            parentCard.classList.toggle('opacity-40', isDisabled);
+            parentCard.classList.toggle('pointer-events-none', isDisabled);
+          }
+        }
+
+        if (tog.type === 'checkbox') {
+          var isChecked = clientState.toggles[tog.name] === true;
+          if (parentCard) {
+            var selectEl = parentCard.querySelector('select[data-tog-name]');
+            if (selectEl) selectEl.value = isChecked ? 'true' : 'false';
+          }
+          if (isDisabled) {
+            if (tog.nodeActive) setNodeVisibilityDirect(tog.nodeActive, false);
+            if (tog.nodeDefault) setNodeVisibilityDirect(tog.nodeDefault, false);
+          } else {
+            if (tog.nodeActive) setNodeVisibilityDirect(tog.nodeActive, isChecked);
+            if (tog.nodeDefault) setNodeVisibilityDirect(tog.nodeDefault, !isChecked);
+          }
+        } else if (tog.type === 'select') {
+          var selectedValue = clientState.toggles[tog.name];
+          tog.options.forEach(function(opt) {
+            if (opt.meshId) {
+              if (isDisabled) {
+                setNodeVisibilityDirect(opt.meshId, false);
+              } else {
+                setNodeVisibilityDirect(opt.meshId, opt.value === selectedValue);
+              }
+            }
+          });
+        }
+      });
+
+      // Uniwersalna reguła wykluczania elementów (np. piaskownica-bok vs podest oraz tagi _HIDE_WHEN_)
+      var activeKeys = [];
+      activeToggles.forEach(function(tog) {
+        if (disabledToggles[tog.name]) return;
+        if (tog.type === 'select') {
+          var selVal = clientState.toggles[tog.name];
+          var opt = tog.options ? tog.options.find(function(o) { return o.value === selVal; }) : null;
+          if (opt && opt.meshId) activeKeys.push(opt.meshId.toLowerCase());
+          if (selVal) activeKeys.push(selVal.toLowerCase());
+        } else if (tog.type === 'checkbox') {
+          if (clientState.toggles[tog.name] === true) {
+            if (tog.nodeActive) activeKeys.push(tog.nodeActive.toLowerCase());
+            activeKeys.push(tog.name.toLowerCase());
+          }
+        }
+      });
+
+      var isPodestActive = activeKeys.some(function(k) { return k.includes('podest'); });
+
+      var isV2Active = activeKeys.some(function(k) { 
+        return k.includes('trigger_v2') || k.includes('v2_trigger') || k.includes('v2-trigger') || k.includes('kamienie-ekstra'); 
+      });
+
+      // Sprawdzamy stan opcjonalnego włącznika poręczy
+      var poreczToggle = activeToggles.find(function(t) { 
+        var n = (t.name || '').toLowerCase();
+        var m = (t.nodeActive || '').toLowerCase();
+        return n.includes('poręcz') || n.includes('porecz') || n.includes('balustrad') || m.includes('balustrad'); 
+      });
+      var isPoreczToggled = poreczToggle ? activeStates[poreczToggle.name] : undefined;
+      var showPorecz = poreczToggle ? (isPoreczToggled === true) : true;
+
+      if (glbScene) {
+        glbScene.traverse(function(obj) {
+          if (!obj.name) return;
+          var nameLower = obj.name.toLowerCase();
+
+          // Reguła 1: Każdy element zawierający "piaskownica-bok" znika, gdy aktywny jest podest
+          if (nameLower.includes('piaskownica-bok')) {
+            obj.visible = !isPodestActive;
+          }
+
+          // Reguła 2: Warianty -default vs -v2 (wyzwalane przez tag -v2-trigger / _TRIGGER_V2 lub kamienie-ekstra)
+          var isDefaultVariant = nameLower.includes('-default') || nameLower.includes('_default');
+          var isV2Variant = (nameLower.includes('-v2') || nameLower.includes('_v2')) && !nameLower.includes('trigger');
+
+          if (isDefaultVariant || isV2Variant) {
+            var shouldShow = isDefaultVariant ? !isV2Active : isV2Active;
+            // Tylko poręcz (opcjonalna) zależy od przełącznika w menu; poręcz schodów (porecz-default / porecz-v2) i inne elementy są zawsze widoczne
+            if (nameLower.includes('balustrada') || (nameLower.includes('porecz') && !nameLower.includes('porecz-default') && !nameLower.includes('porecz-v2'))) {
+              obj.visible = shouldShow && showPorecz;
+            } else {
+              obj.visible = shouldShow;
+            }
+          }
+
+          // Reguła 2: Uniwersalny tag Blendera _HIDE_WHEN_[fraza]
+          if (nameLower.includes('_hide_when_')) {
+            var parts = nameLower.split('_hide_when_');
+            var triggerWord = parts[1].split('_')[0].split('.')[0].toLowerCase();
+            var shouldHide = activeKeys.some(function(k) { return k.includes(triggerWord); });
+            obj.visible = !shouldHide;
+          }
+        });
+      }
+
+      // Obsługa animowanej piaskownicy (model Nela z animowanymi włazami)
+      var hasAnimSandbox = (currentModelKey === 'nela');
+      var isZamykanaPiaskownicaActive = false;
+      if (activeToggles) {
+        var towerToggle = activeToggles.find(function(t) { 
+          var n = (t.name || '').toLowerCase();
+          return n.includes('wieżą') || n.includes('wieza'); 
+        });
+        if (towerToggle) {
+          var selVal = clientState.toggles[towerToggle.name];
+          if (towerToggle.type === 'select' && towerToggle.options) {
+            var opt = towerToggle.options.find(function(o) { return o.value === selVal; });
+            if (opt) {
+              var mesh = (opt.meshId || '').toLowerCase();
+              var label = (opt.label || '').toLowerCase();
+              if (mesh.includes('piaskownica-animacja') || mesh.includes('animacja')) {
+                isZamykanaPiaskownicaActive = true;
+              } else if (label.includes('zamykane') && !label.includes('otwarta')) {
+                isZamykanaPiaskownicaActive = true;
+              }
+            }
+          } else {
+            isZamykanaPiaskownicaActive = (selVal === 'piaskownica' || selVal === 'zamykane-w-azy-piaskownicy');
+          }
+        }
+      }
+
+      var animToggleWrapper = document.getElementById("sandbox-anim-toggle-wrapper");
+      if (animToggleWrapper) {
+        if (hasAnimSandbox && isZamykanaPiaskownicaActive && !isPodestActive) {
+          animToggleWrapper.style.display = "block";
+          setNodeVisibilityDirect("GRUPA-nela-piaskownica-animacja", true);
+          setNodeVisibilityDirect("GRUPA-nela-animacja", true);
+        } else {
+          animToggleWrapper.style.display = "none";
+          resetSandboxAnimation();
+          setNodeVisibilityDirect("GRUPA-nela-piaskownica-animacja", false);
+          setNodeVisibilityDirect("GRUPA-nela-animacja", false);
+        }
+      }
+
+      // Warunkowa widoczność sekcji koloru deseczki, kubełka, trapezu, orczyka
+      var hasAnyDeska = false;
+      var hasAnyKubelek = false;
+      var hasAnyTrapez = false;
+      var hasAnyOrczyk = false;
+
+      // Sprawdź stan domyślny huśtawki przy ściance w Jaśku
+      if (currentModelKey === 'jasiek') {
+        if (clientState.toggles["Pionowa ścianka z drążków zamiast huśtawki przy ściance"] !== true) {
+          hasAnyDeska = true;
+        }
+      }
+
+      activeToggles.forEach(function(tog) {
+        if (disabledToggles[tog.name]) return;
+        var v = clientState.toggles[tog.name];
+        if (v === "deska" || v === "tradycyjna-deseczka") hasAnyDeska = true;
+        if (v === "kubelek" || v === "hu-tawka-kube-kowa") hasAnyKubelek = true;
+        if (v === "trapez" || v === "dr--ek-trapezowy") hasAnyTrapez = true;
+        if (v === "orczyk" || v === "orczyk-gimnastyczny") hasAnyOrczyk = true;
+      });
+
+      var deskaSection = document.getElementById("section-deska-color");
+      if (deskaSection) {
+        deskaSection.style.display = hasAnyDeska ? "block" : "none";
+      }
+
+      var kubelekSection = document.getElementById("section-kubelek-color");
+      if (kubelekSection) {
+        kubelekSection.style.display = hasAnyKubelek ? "block" : "none";
+      }
+
+      var trapezSection = document.getElementById("section-trapez-color");
+      if (trapezSection) {
+        trapezSection.style.display = hasAnyTrapez ? "block" : "none";
+      }
+
+      var orczykSection = document.getElementById("section-orczyk-color");
+      if (orczykSection) {
+        orczykSection.style.display = hasAnyOrczyk ? "block" : "none";
+      }
+
+      var hasAnyDrazki = !!(MODELS_DATA[currentModelKey] && MODELS_DATA[currentModelKey].hasDrazki);
+
+      var drazkiSection = document.getElementById("section-drazki-color");
+      if (drazkiSection) {
+        drazkiSection.style.display = hasAnyDrazki ? "block" : "none";
+      }
+
+      renderNodeTree();
+      forceViewerRerender(viewer);
+      calculateClientPrice();
+    }
+
+    function clientToggleCheckbox(toggleName, isChecked) {
+      clientState.toggles[toggleName] = isChecked;
+      applyAllGeometryStates();
+      calculateClientPrice();
+    }
+
+    function clientToggleSelect(toggleName, selectedValue) {
+      clientState.toggles[toggleName] = selectedValue;
+      applyAllGeometryStates();
+      calculateClientPrice();
+    }
+
+    let isSandboxClosed = false;
+    let sandboxAnimCounter = 0;
+
+    function toggleSandboxAnimation(forcedState) {
+      if (!viewer) return;
+
+      const anims = viewer.availableAnimations || [];
+      if (!anims || anims.length === 0) return;
+
+      if (typeof forcedState === "boolean") {
+        isSandboxClosed = forcedState;
+        sandboxAnimCounter = isSandboxClosed ? 1 : 0;
+      } else {
+        sandboxAnimCounter++;
+        isSandboxClosed = (sandboxAnimCounter % 2 === 1);
+      }
+
+      // Logika identyczna jak w C:\WORK\AR-dema\ciarko:
+      // speeds = [1, -1] -> mv.timeScale = speeds[...]; mv.play({ repetitions: 1 });
+      const duration = viewer.duration || 3.04;
+      if (isSandboxClosed) {
+        if (viewer.currentTime >= duration - 0.05) {
+          viewer.currentTime = 0;
+        }
+        viewer.timeScale = 1;
+      } else {
+        if (viewer.currentTime <= 0.05) {
+          viewer.currentTime = duration;
+        }
+        viewer.timeScale = -1;
+      }
+      viewer.play({ repetitions: 1 });
+
+      const checkbox = document.getElementById("sandbox-anim-checkbox");
+      if (checkbox) checkbox.checked = isSandboxClosed;
+    }
+
+    function resetSandboxAnimation() {
+      sandboxAnimCounter = 0;
+      isSandboxClosed = false;
+
+      const checkbox = document.getElementById("sandbox-anim-checkbox");
+      if (checkbox) checkbox.checked = false;
+
+      if (viewer) {
+        viewer.pause();
+        viewer.currentTime = 0;
+      }
+    }
+
+    function refreshClientUI() {
+      buildClientMaterialSwatches();
+      buildClientGeometryOptions();
+      calculateClientPrice();
+    }
+
+    function buildClientMaterialSwatches() {
+      // 1. Wood Main
+      const woodContainer = document.getElementById("client-wood-swatches");
+      woodContainer.innerHTML = "";
+      Object.keys(woodTexturePaths).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.woodMain === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+        btn.style.backgroundImage = `url(${woodTexturePaths[key]})`;
+        btn.style.backgroundSize = "cover";
+        btn.title = key;
+        btn.onclick = () => {
+          clientState.woodMain = key;
+          buildClientMaterialSwatches();
+          applyWoodMainTexture(woodTexturePaths[key]);
+        };
+        woodContainer.appendChild(btn);
+      });
+
+      // 2. Wood Accent
+      const woodAccentContainer = document.getElementById("client-wood-accent-swatches");
+      woodAccentContainer.innerHTML = "";
+      Object.keys(woodTexturePaths).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.woodAccent === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+        btn.style.backgroundImage = `url(${woodTexturePaths[key]})`;
+        btn.style.backgroundSize = "cover";
+        btn.title = key;
+        btn.onclick = () => {
+          clientState.woodAccent = key;
+          buildClientMaterialSwatches();
+          applyWoodAccentTexture(woodTexturePaths[key]);
+        };
+        woodAccentContainer.appendChild(btn);
+      });
+
+      // 3. Slide Color
+      const slideContainer = document.getElementById("client-slide-swatches");
+      slideContainer.innerHTML = "";
+      Object.keys(plasticColors).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.slide === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+        btn.style.backgroundColor = plasticColors[key];
+        btn.title = key;
+        btn.onclick = () => {
+          clientState.slide = key;
+          buildClientMaterialSwatches();
+          applySlideColor(plasticColors[key]);
+        };
+        slideContainer.appendChild(btn);
+      });
+
+      // 4A. Swing Deska Color
+      const deskaContainer = document.getElementById("client-deska-swatches");
+      deskaContainer.innerHTML = "";
+      Object.keys(plasticColors).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.deska === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+        btn.style.backgroundColor = plasticColors[key];
+        btn.title = key;
+        btn.onclick = () => {
+          clientState.deska = key;
+          buildClientMaterialSwatches();
+          applyDeskaColor(plasticColors[key]);
+        };
+        deskaContainer.appendChild(btn);
+      });
+
+      // 4B. Swing Kubełek Color
+      const kubelekContainer = document.getElementById("client-kubelek-swatches");
+      kubelekContainer.innerHTML = "";
+      Object.keys(plasticColors).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.kubelek === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+        btn.style.backgroundColor = plasticColors[key];
+        btn.title = key;
+        btn.onclick = () => {
+          clientState.kubelek = key;
+          buildClientMaterialSwatches();
+          applyKubelekColor(plasticColors[key]);
+        };
+        kubelekContainer.appendChild(btn);
+      });
+
+      // 4C. Swing Trapez Color
+      const trapezContainer = document.getElementById("client-trapez-swatches");
+      if (trapezContainer) {
+        trapezContainer.innerHTML = "";
+        Object.keys(trapezColors).forEach(key => {
+          const btn = document.createElement("button");
+          btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.trapez === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+          btn.style.backgroundColor = trapezColors[key];
+          btn.title = key;
+          btn.onclick = () => {
+            clientState.trapez = key;
+            buildClientMaterialSwatches();
+            applyTrapezColor(trapezColors[key]);
+          };
+          trapezContainer.appendChild(btn);
+        });
+      }
+
+      // 4D. Swing Orczyk Color
+      const orczykContainer = document.getElementById("client-orczyk-swatches");
+      if (orczykContainer) {
+        orczykContainer.innerHTML = "";
+        Object.keys(orczykColors).forEach(key => {
+          const btn = document.createElement("button");
+          btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.orczyk === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+          btn.style.backgroundColor = orczykColors[key];
+          btn.title = key;
+          btn.onclick = () => {
+            clientState.orczyk = key;
+            buildClientMaterialSwatches();
+            applyOrczykColor(orczykColors[key]);
+          };
+          orczykContainer.appendChild(btn);
+        });
+      }
+
+      // 4E. Gymnastic Bars Color
+      const drazkiContainer = document.getElementById("client-drazki-swatches");
+      if (drazkiContainer) {
+        drazkiContainer.innerHTML = "";
+        Object.keys(drazkiColors).forEach(key => {
+          const btn = document.createElement("button");
+          btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.drazki === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+          btn.style.backgroundColor = drazkiColors[key];
+          btn.title = key;
+          btn.onclick = () => {
+            clientState.drazki = key;
+            buildClientMaterialSwatches();
+            applyDrazkiColor(drazkiColors[key]);
+          };
+          drazkiContainer.appendChild(btn);
+        });
+      }
+
+      // 5. Climbing Stones
+      const climbContainer = document.getElementById("client-climb-swatches");
+      climbContainer.innerHTML = "";
+      Object.keys(climbTexturePaths).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.climb === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+        btn.style.backgroundImage = `url(${climbTexturePaths[key]})`;
+        btn.style.backgroundSize = "cover";
+        btn.title = key;
+        btn.onclick = () => {
+          clientState.climb = key;
+          buildClientMaterialSwatches();
+          applyClimbTexture(climbTexturePaths[key]);
+        };
+        climbContainer.appendChild(btn);
+      });
+
+      // 6. Rope Swatches (if applicable)
+      const ropeContainer = document.getElementById("client-rope-swatches");
+      ropeContainer.innerHTML = "";
+      Object.keys(ropeTexturePaths).forEach(key => {
+        const btn = document.createElement("button");
+        btn.className = `w-8 h-8 rounded-full border-2 transition hover:scale-110 flex items-center justify-center ${clientState.rope === key ? 'border-amber-500 scale-110 shadow-lg shadow-amber-500/30' : 'border-slate-800'}`;
+        btn.style.backgroundImage = `url(${ropeTexturePaths[key]})`;
+        btn.style.backgroundSize = "cover";
+        btn.title = key;
+        btn.onclick = () => {
+          clientState.rope = key;
+          buildClientMaterialSwatches();
+          applyRopeTexture(ropeTexturePaths[key]);
+        };
+        ropeContainer.appendChild(btn);
+      });
+    }
+
+    function buildClientGeometryOptions() {
+      const container = document.getElementById("client-toggles-container");
+      container.innerHTML = "";
+
+      if (activeToggles.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 italic">Brak wariantów geometrycznych dla tego modelu.</p>`;
+        return;
+      }
+
+      var activeStates = {};
+      activeToggles.forEach(function(tog) {
+        if (tog.type === 'checkbox') {
+          activeStates[tog.name] = clientState.toggles[tog.name] === true;
+        } else {
+          activeStates[tog.name] = clientState.toggles[tog.name];
+        }
+      });
+
+      var disabledToggles = {};
+      activeToggles.forEach(function(tog) {
+        var isDisabled = false;
+        if (tog.disableWhen) {
+          var dw = tog.disableWhen.trim();
+          isDisabled = activeStates[tog.disableWhen] === true || activeStates[dw] === true;
+        }
+        if (tog.enableWhen) {
+          var ew = tog.enableWhen.trim();
+          var parentTog = activeToggles.find(function(t) {
+            return (t.name || '').trim() === ew || t.name === tog.enableWhen;
+          });
+          var parentVal = activeStates[tog.enableWhen] !== undefined ? activeStates[tog.enableWhen] : activeStates[ew];
+          if (tog.enableWhenValue !== undefined && tog.enableWhenValue !== "") {
+            var targetVal = (tog.enableWhenValue || '').toLowerCase().trim();
+            var parentValStr = (parentVal || '').toString().toLowerCase().trim();
+            var parentOpt = parentTog && parentTog.options ? parentTog.options.find(function(o) {
+              return (o.value || '').toLowerCase() === parentValStr;
+            }) : null;
+            var parentLabelStr = parentOpt ? (parentOpt.label || '').toLowerCase().trim() : '';
+
+            var isMatch = false;
+            if (parentValStr === targetVal) {
+              isMatch = true;
+            } else if (targetVal === 'piaskownica' || targetVal.indexOf('zamykane') !== -1) {
+              isMatch = parentValStr === 'piaskownica' || 
+                        parentValStr.indexOf('zamykane') !== -1 || 
+                        parentLabelStr.indexOf('zamykane') !== -1;
+            } else if (targetVal) {
+              isMatch = parentValStr.indexOf(targetVal) !== -1;
+            }
+            isDisabled = !isMatch;
+          } else {
+            isDisabled = parentVal !== true;
+          }
+        }
+        if (isDisabled) {
+          disabledToggles[tog.name] = true;
+          disabledToggles[(tog.name || '').trim()] = true;
+        }
+      });
+
+      activeToggles.forEach(tog => {
+        const isDisabled = disabledToggles[tog.name] === true;
+        const div = document.createElement("div");
+        div.className = `geo-toggle-card bg-slate-900 border border-slate-800 p-3.5 rounded-xl flex flex-col gap-2 shadow-md transition ${isDisabled && !tog.enableWhen ? 'opacity-40 pointer-events-none' : ''}`;
+        div.setAttribute("data-card-tog-name", tog.name);
+        if (tog.enableWhen && isDisabled) {
+          div.style.display = 'none';
+        }
+
+        if (tog.type === "checkbox") {
+          const checked = clientState.toggles[tog.name] === true;
+          const priceText = tog.price > 0 ? ` (+${tog.price} zł)` : '';
+          div.innerHTML = `
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-slate-200 block">${tog.name}:</span>
+                <span class="text-amber-500 font-semibold">${checked && tog.price > 0 ? '+' + tog.price + ' zł' : ''}</span>
+              </div>
+              <select data-tog-name="${tog.name}" onchange="clientToggleCheckbox('${tog.name}', this.value === 'true')" ${isDisabled ? 'disabled' : ''} class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-medium">
+                <option value="false" ${!checked ? 'selected' : ''}>Nie</option>
+                <option value="true" ${checked ? 'selected' : ''}>Tak${priceText}</option>
+              </select>
+            </div>
+          `;
+        } else {
+          const selectedValue = clientState.toggles[tog.name] || (tog.options.find(o => o.isDefault) || tog.options[0]).value;
+          
+          let selectHtml = `
+            <div class="space-y-1.5">
+              <span class="text-xs font-bold text-slate-200 block">${tog.name}</span>
+              <select data-tog-name="${tog.name}" onchange="clientToggleSelect('${tog.name}', this.value)" ${isDisabled ? 'disabled' : ''} class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 font-medium">
+          `;
+          tog.options.forEach(opt => {
+            const priceText = opt.price > 0 ? ` (+${opt.price} zł)` : '';
+            selectHtml += `<option value="${opt.value}" ${selectedValue === opt.value ? 'selected' : ''}>${opt.label}${priceText}</option>`;
+          });
+          selectHtml += `</select></div>`;
+          div.innerHTML = selectHtml;
+        }
+        container.appendChild(div);
+      });
+    }
+
+    function calculateClientPrice() {
+      var extrasSum = 0;
+      var activeStates = {};
+      activeToggles.forEach(function(tog) {
+        if (tog.type === 'checkbox') {
+          activeStates[tog.name] = clientState.toggles[tog.name] === true;
+        } else {
+          activeStates[tog.name] = clientState.toggles[tog.name];
+        }
+      });
+
+      var disabledToggles = {};
+      activeToggles.forEach(function(tog) {
+        var isDisabled = false;
+        if (tog.disableWhen) {
+          var dw = tog.disableWhen.trim();
+          isDisabled = activeStates[tog.disableWhen] === true || activeStates[dw] === true;
+        }
+        if (tog.enableWhen) {
+          var ew = tog.enableWhen.trim();
+          var parentTog = activeToggles.find(function(t) {
+            return (t.name || '').trim() === ew || t.name === tog.enableWhen;
+          });
+          var parentVal = activeStates[tog.enableWhen] !== undefined ? activeStates[tog.enableWhen] : activeStates[ew];
+          if (tog.enableWhenValue !== undefined && tog.enableWhenValue !== "") {
+            var targetVal = (tog.enableWhenValue || '').toLowerCase().trim();
+            var parentValStr = (parentVal || '').toString().toLowerCase().trim();
+            var parentOpt = parentTog && parentTog.options ? parentTog.options.find(function(o) {
+              return (o.value || '').toLowerCase() === parentValStr;
+            }) : null;
+            var parentLabelStr = parentOpt ? (parentOpt.label || '').toLowerCase().trim() : '';
+
+            var isMatch = false;
+            if (parentValStr === targetVal) {
+              isMatch = true;
+            } else if (targetVal === 'piaskownica' || targetVal.indexOf('zamykane') !== -1) {
+              isMatch = parentValStr === 'piaskownica' || 
+                        parentValStr.indexOf('zamykane') !== -1 || 
+                        parentLabelStr.indexOf('zamykane') !== -1;
+            } else if (targetVal) {
+              isMatch = parentValStr.indexOf(targetVal) !== -1;
+            }
+            isDisabled = !isMatch;
+          } else {
+            isDisabled = parentVal !== true;
+          }
+        }
+        if (isDisabled) {
+          disabledToggles[tog.name] = true;
+          disabledToggles[(tog.name || '').trim()] = true;
+        }
+      });
+
+      activeToggles.forEach(function(tog) {
+        var isDisabled = disabledToggles[tog.name] === true;
+        if (isDisabled) return;
+
+        if (tog.type === 'checkbox' && clientState.toggles[tog.name] === true) {
+          extrasSum += tog.price;
+        } else if (tog.type === 'select') {
+          var selectedValue = clientState.toggles[tog.name];
+          var selectedOpt = tog.options.find(function(o) { return o.value === selectedValue; });
+          if (selectedOpt && selectedOpt.price) {
+            extrasSum += parseFloat(selectedOpt.price);
+          }
+        }
+      });
+
+      var total = basePrice + extrasSum;
+
+      document.getElementById("client-base-price").innerText = basePrice.toLocaleString("pl-PL") + ",00 zł";
+      document.getElementById("client-extras-price").innerText = extrasSum.toLocaleString("pl-PL") + ",00 zł";
+      document.getElementById("client-total-price").innerText = total.toLocaleString("pl-PL") + ",00 zł";
+    }
+
+    // Aplikowanie materiałów 1:1 jak we wtyczce WordPress (matName.includes(materialId.toLowerCase()))
+    async function applyMaterialCustomization(materialId, type, value) {
+      if (!viewer || !viewer.model || !viewer.model.materials) return;
+
+      if (type === 'texture') {
+        try {
+          var texture = await viewer.createTexture(value);
+          for (var material of viewer.model.materials) {
+            var matName = material.name.toLowerCase();
+            if (matName.includes(materialId.toLowerCase())) {
+              if (material.pbrMetallicRoughness && material.pbrMetallicRoughness.baseColorTexture) {
+                material.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Failed to apply texture to material: " + materialId, err);
+        }
+      } else {
+        var rgb = hexToRgb(value);
+        for (var material of viewer.model.materials) {
+          var matName = material.name.toLowerCase();
+          if (matName.includes(materialId.toLowerCase())) {
+            if (material.pbrMetallicRoughness) {
+              material.pbrMetallicRoughness.setBaseColorFactor(rgb);
+            }
+          }
+        }
+      }
+    }
+
+    async function updateAllWoodMaterials() {
+      if (!viewer || !viewer.model || !viewer.model.materials) return;
+      
+      const mainPath = woodTexturePaths[clientState.woodMain];
+      const accentPath = woodTexturePaths[clientState.woodAccent];
+      if (!mainPath || !accentPath) return;
+
+      // Wyjątek biznesowy: Konstrukcja = Antracyt (r09) + Akcent = Biały (r01)
+      const isAntracytAndWhite = (
+        (clientState.woodMain === "Antracyt Szary" || mainPath.includes("r09")) &&
+        (clientState.woodAccent === "Śnieg Północy (biały)" || accentPath.includes("r01"))
+      );
+
+      try {
+        const mainTex = await viewer.createTexture(mainPath);
+        const accentTex = await viewer.createTexture(accentPath);
+
+        for (const material of viewer.model.materials) {
+          const matName = material.name.toLowerCase();
+          
+          if (matName.includes("drewno-konstrukcja")) {
+            if (material.pbrMetallicRoughness && material.pbrMetallicRoughness.baseColorTexture) {
+              material.pbrMetallicRoughness.baseColorTexture.setTexture(mainTex);
+            }
+          } else if (matName.includes("drewno-akcent2")) {
+            // drewno-akcent2 to barierki, zastrzały i deska łącząca nogi -> zawsze kolor wybranego akcentu (w tym Biały przy Antracyt+Biały)
+            if (material.pbrMetallicRoughness && material.pbrMetallicRoughness.baseColorTexture) {
+              material.pbrMetallicRoughness.baseColorTexture.setTexture(accentTex);
+            }
+          } else if (matName.includes("drewno-akcent")) {
+            // drewno-akcent to dach i reszta -> przy Antracyt+Biały zostaje antracytowy (mainTex), a normalnie ma kolor akcentu
+            const texToApply = isAntracytAndWhite ? mainTex : accentTex;
+            if (material.pbrMetallicRoughness && material.pbrMetallicRoughness.baseColorTexture) {
+              material.pbrMetallicRoughness.baseColorTexture.setTexture(texToApply);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to update wood textures:", err);
+      }
+    }
+
+    async function applyWoodMainTexture(texturePath) {
+      await updateAllWoodMaterials();
+    }
+
+    async function applyWoodAccentTexture(texturePath) {
+      await updateAllWoodMaterials();
+    }
+
+    function applySlideColor(hexColor) {
+      applyMaterialCustomization("zdjezdzalnia", "color", hexColor);
+    }
+
+    function applyDeskaColor(hexColor) {
+      applyMaterialCustomization("plastic-deseczka", "color", hexColor);
+    }
+
+    function applyKubelekColor(hexColor) {
+      applyMaterialCustomization("plastic-kubelek", "color", hexColor);
+    }
+
+    function applyTrapezColor(hexColor) {
+      applyMaterialCustomization("plastic-trapez", "color", hexColor);
+    }
+
+    function applyOrczykColor(hexColor) {
+      applyMaterialCustomization("plastic-orczyk", "color", hexColor);
+    }
+
+    function applyDrazkiColor(hexColor) {
+      applyMaterialCustomization("drazki", "color", hexColor);
+    }
+
+    async function applyRopeTexture(texturePath) {
+      if (['nela', 'jasiek', 'laura'].includes(currentModelKey)) {
+        await applyMaterialCustomization("siatka", "texture", texturePath);
+      } else {
+        await applyMaterialCustomization("lina", "texture", texturePath);
+      }
+    }
+
+    async function applyClimbTexture(texturePath) {
+      await applyMaterialCustomization("climb", "texture", texturePath);
+    }
+
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      if (!result) return [1, 1, 1, 1];
+      
+      const r = parseInt(result[1], 16) / 255;
+      const g = parseInt(result[2], 16) / 255;
+      const b = parseInt(result[3], 16) / 255;
+      
+      // Konwersja z sRGB Gamma (standardowy CSS) do sRGB Linear (Model-Viewer / WebGL PBR)
+      const convertChannel = function(c) {
+        return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      };
+      
+      return [
+        convertChannel(r),
+        convertChannel(g),
+        convertChannel(b),
+        1.0
+      ];
+    }
+
+    function rgbToHex(r, g, b) {
+      const toHex = c => Math.round(c * 255).toString(16).padStart(2, '0');
+      return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    }
+
+    function refreshAdminTogglesList() {
+      const container = document.getElementById("admin-toggles-list");
+      container.innerHTML = "";
+
+      if (activeToggles.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 italic">Brak wariantów dla tego modelu.</p>`;
+        return;
+      }
+
+      activeToggles.forEach((tog, idx) => {
+        const div = document.createElement("div");
+        div.className = "bg-slate-900 border border-slate-800 p-3 rounded-lg flex justify-between items-center text-xs";
+        
+        let details = "";
+        if (tog.type === "checkbox") {
+          details = `<span class="text-slate-400">Checkbox (Aktywny: <code class="text-amber-300 font-mono">${tog.nodeActive || 'Brak'}</code>)</span>`;
+        } else {
+          const optsStr = tog.options.map(o => `${o.label} [${o.meshId || 'Brak'}]`).join(", ");
+          details = `<span class="text-slate-400">Wybór 1-z-N (${optsStr})</span>`;
+        }
+
+        div.innerHTML = `
+          <div>
+            <span class="font-bold text-slate-200">${tog.name}</span>
+            <div class="mt-0.5">${details}</div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function generateWPJson() {
+      const modelDef = MODELS_DATA[currentModelKey] || {};
+      const orbit = viewer.getCameraOrbit();
+      const orbitStr = `${Math.round(orbit.theta * 180 / Math.PI)}deg ${Math.round(orbit.phi * 180 / Math.PI)}deg auto`;
+      const targetStr = `0m 1m 0m`;
+
+      let activeAttrs = [];
+      if (currentModelKey === "aurelia") {
+        activeAttrs = [
+          { id: "drewno-konstrukcja", showWhenToggle: "", showWhenValue: "" },
+          { id: "drewno-akcent", showWhenToggle: "", showWhenValue: "" },
+          { id: "zdjezdzalnia", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-deseczka", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-kubelek", showWhenToggle: "", showWhenValue: "" },
+          { id: "climb", showWhenToggle: "", showWhenValue: "" }
+        ];
+      } else if (currentModelKey === "gaja" || currentModelKey === "maja") {
+        activeAttrs = [
+          { id: "drewno-konstrukcja", showWhenToggle: "", showWhenValue: "" },
+          { id: "drewno-akcent", showWhenToggle: "", showWhenValue: "" },
+          { id: "zdjezdzalnia", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-deseczka", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-kubelek", showWhenToggle: "", showWhenValue: "" },
+          { id: "climb", showWhenToggle: "", showWhenValue: "" }
+        ];
+      } else if (currentModelKey === "nela") {
+        activeAttrs = [
+          { id: "drewno-konstrukcja", showWhenToggle: "", showWhenValue: "" },
+          { id: "drewno-akcent", showWhenToggle: "", showWhenValue: "" },
+          { id: "zdjezdzalnia", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-deseczka", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-kubelek", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-trapez", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-orczyk", showWhenToggle: "", showWhenValue: "" },
+          { id: "drazki", showWhenToggle: "", showWhenValue: "" },
+          { id: "climb", showWhenToggle: "", showWhenValue: "" },
+          { id: "siatka", showWhenToggle: "", showWhenValue: "" }
+        ];
+      } else {
+        activeAttrs = [
+          { id: "drewno-konstrukcja", showWhenToggle: "", showWhenValue: "" },
+          { id: "drewno-akcent", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-deseczka", showWhenToggle: "", showWhenValue: "" },
+          { id: "plastic-kubelek", showWhenToggle: "", showWhenValue: "" },
+          { id: "climb", showWhenToggle: "", showWhenValue: "" },
+          { id: "siatka", showWhenToggle: "", showWhenValue: "" }
+        ];
+      }
+
+      const config = {
+        name: modelDef.name || "Plac zabaw",
+        glb_url: "/wp-content/colordrop/models/" + modelDef.path.split("/").pop(),
+        base_price: modelDef.basePrice || basePrice,
+        camera_orbit: orbitStr,
+        camera_target: targetStr,
+        sidebar_title: "Skonfiguruj swój plac zabaw: %name%",
+        sidebar_subtitle: "Dostosuj wybarwienie drewna, kolor zjeżdżalni, akcesoria oraz wyposażenie wieży.",
+        parsed_nodes: getFilteredGLBNodes(),
+        active_attributes: activeAttrs,
+        geometry_toggles: activeToggles
+      };
+
+      document.getElementById("wp-json-export-area").value = JSON.stringify(config, null, 2);
+      document.getElementById("wp-json-export-container").classList.remove("hidden");
+    }
+
+    function copyWPJsonToClipboard() {
+      const textarea = document.getElementById("wp-json-export-area");
+      textarea.select();
+      navigator.clipboard.writeText(textarea.value).then(() => {
+        alert("Konfiguracja JSON dla modelu " + MODELS_DATA[currentModelKey].name + " została skopiowana do schowka! Możesz ją wkleić bezpośrednio w panelu WordPress.");
+      });
+    }
+
+    async function submitMockEnquiry() {
+      const modelName = MODELS_DATA[currentModelKey].name;
+      
+      let summaryText = `WYBRANA KONFIGURACJA 3D:
+Model: ${modelName}
+Cena całkowita: ${document.getElementById("client-total-price").innerText}
+
+Materiały:
+- Wybarwienie główne: ${clientState.woodMain}
+- Wybarwienie akcentów: ${clientState.woodAccent}
+- Kolor zjeżdżalni: ${clientState.slide}
+- Kolor huśtawki (deseczka): ${clientState.deska}
+- Kolor huśtawki (kubełek): ${clientState.kubelek}
+- Kolor drążków: ${clientState.drazki}
+- Kamienie wspinaczkowe: ${clientState.climb}
+
+Wyposażenie / Geometria:
+- Układ konstrukcji: ${clientState.isMirrored ? 'Odbicie lustrzane' : 'Standardowy'}
+`;
+
+      activeToggles.forEach(tog => {
+        if (tog.type === "checkbox") {
+          summaryText += `- ${tog.name}: ${clientState.toggles[tog.name] ? 'TAK' : 'NIE'}\n`;
+        } else if (tog.type === "select") {
+          const val = clientState.toggles[tog.name];
+          const opt = tog.options.find(o => o.value === val);
+          summaryText += `- ${tog.name}: ${opt ? opt.label : val}\n`;
+        }
+      });
+
+      document.getElementById("mail-body").innerText = summaryText;
+
+      const blob = await viewer.toBlob({ mimeType: 'image/png' });
+      if (blob) {
+        document.getElementById("screenshot-preview").src = URL.createObjectURL(blob);
+      }
+
+      document.getElementById("receipt-modal").classList.remove("hidden");
+      document.getElementById("receipt-modal").classList.add("flex");
+    }
+
+    function closeReceiptModal() {
+      document.getElementById("receipt-modal").classList.add("hidden");
+      document.getElementById("receipt-modal").classList.remove("flex");
+    }
+
+    // Inicjalizacja UI na starcie
+    refreshClientUI();
+    const initModelDef = MODELS_DATA[currentModelKey];
+    if (initModelDef) {
+      const drazkiSec = document.getElementById("section-drazki-color");
+      if (drazkiSec) {
+        drazkiSec.style.display = initModelDef.hasDrazki ? "block" : "none";
+      }
+    }
+  </script>
+</body>
+</html>

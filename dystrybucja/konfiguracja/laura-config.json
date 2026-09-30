@@ -1,0 +1,141 @@
+{
+  "name": "Wooden Boyz Laura",
+  "glb_url": "/wp-content/colordrop/models/wooden-boyz-laura.glb",
+  "base_price": 2399,
+  "camera_orbit": "-45deg 92deg auto",
+  "camera_target": "0m auto 0m",
+  "sidebar_title": "Skonfiguruj swój plac zabaw: %name%",
+  "sidebar_subtitle": "Dostosuj wybarwienie drewna, kolory akcesoriów oraz opcje wyposażenia placu zabaw.",
+  "parsed_nodes": [
+    "konstrukcja-laura",
+    "drazki-gora",
+    "GRUPA-drazek-akrobatyczny",
+    "lina-wezly",
+    "siatka",
+    "GRUPA-hustawka-trapez",
+    "ruchoma-drabinka",
+    "kamienie",
+    "GRUPA-kamienie-ekstra",
+    "GRUPA-hustawka-deska",
+    "GRUPA-hustawka-orczyk",
+    "GRUPA-drazki-zamiast",
+    "GRUPA-hustawka-kubelek"
+  ],
+  "active_attributes": [
+    {
+      "id": "drewno-konstrukcja",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "drewno-akcent",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-deseczka",
+      "showWhenToggle": "Rodzaj huśtawki",
+      "showWhenValue": "tradycyjna-deseczka"
+    },
+    {
+      "id": "plastic-orczyk",
+      "showWhenToggle": "Rodzaj huśtawki",
+      "showWhenValue": "orczyk-gimnastyczny"
+    },
+    {
+      "id": "plastic-kubelek",
+      "showWhenToggle": "Rodzaj huśtawki",
+      "showWhenValue": "hu-tawka-kube-kowa"
+    },
+    {
+      "id": "plastic-trapez",
+      "showWhenToggle": "Rodzaj huśtawki",
+      "showWhenValue": "dr--ek-trapezowy"
+    },
+    {
+      "id": "drazki",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "siatka",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "climb",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    }
+  ],
+  "geometry_toggles": [
+    {
+      "id": 1783350226545,
+      "name": "Zestaw dodatkowych kotw",
+      "type": "checkbox",
+      "isCosmetic": true,
+      "price": 149,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": ""
+    },
+    {
+      "id": 1,
+      "name": "Pionowa ścianka z drążków zamiast huśtawki",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 499,
+      "disableWhen": "",
+      "nodeDefault": "GRUPA-hustawka-deska",
+      "nodeActive": "GRUPA-drazki-zamiast"
+    },
+    {
+      "id": 2,
+      "name": "Podwójna ilość kamieni do wspinaczki",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 299,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-kamienie-ekstra"
+    },
+    {
+      "id": 3,
+      "name": "Rodzaj huśtawki",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "Pionowa ścianka z drążków zamiast huśtawki",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "tradycyjna-deseczka",
+          "meshId": "GRUPA-hustawka-deska",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Drążek trapezowy",
+          "value": "dr--ek-trapezowy",
+          "meshId": "GRUPA-hustawka-trapez",
+          "price": 0,
+          "isDefault": false
+        },
+        {
+          "label": "Orczyk gimnastyczny",
+          "value": "orczyk-gimnastyczny",
+          "meshId": "GRUPA-hustawka-orczyk",
+          "price": 0,
+          "isDefault": false
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "hu-tawka-kube-kowa",
+          "meshId": "GRUPA-hustawka-kubelek",
+          "price": 0,
+          "isDefault": false
+        }
+      ]
+    }
+  ]
+}

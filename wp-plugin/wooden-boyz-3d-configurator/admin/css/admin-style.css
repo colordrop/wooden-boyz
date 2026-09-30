@@ -1,0 +1,189 @@
+/* CSS Styles for the WordPress Admin Configurator Interface */
+
+.wb3d-admin-wrap {
+    max-width: 1000px;
+    margin-top: 20px;
+}
+
+.wb3d-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    padding: 24px;
+    margin-bottom: 24px;
+    border-radius: 8px;
+}
+
+.wb3d-card h2 {
+    margin-top: 0;
+    font-size: 1.3em;
+    border-b: 1px solid #eee;
+    padding-bottom: 12px;
+}
+
+.wb3d-divider {
+    border: 0;
+    border-top: 1px solid #e5e5e5;
+    margin: 24px 0;
+}
+
+/* Attributes list & items */
+.wb3d-attribute-item {
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.wb3d-attribute-item-header {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.wb3d-attribute-item-header input[type="text"] {
+    font-weight: bold;
+}
+
+.wb3d-remove-btn {
+    color: #b32d2e;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+}
+
+.wb3d-remove-btn:hover {
+    color: #d72c2c;
+}
+
+/* Options/Values sublist */
+.wb3d-options-sublist {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.wb3d-option-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.wb3d-option-row:last-child {
+    margin-bottom: 0;
+}
+
+.wb3d-color-preview {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    display: inline-block;
+}
+
+.wb3d-image-preview {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-size: cover;
+    background-position: center;
+    display: inline-block;
+}
+
+/* Product Meta Box styling */
+.wb3d-attributes-checklist {
+    background: #fff;
+    border: 1px solid #dcdcde;
+    padding: 12px 16px;
+    border-radius: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+.wb3d-check-label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.wb3d-check-label:last-child {
+    margin-bottom: 0;
+}
+
+.wb3d-check-label input {
+    margin-right: 8px !important;
+}
+
+/* Toggles Builder List */
+.wb3d-toggle-item {
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.wb3d-toggle-item-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+.wb3d-row-flex {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.wb3d-row-flex > div {
+    flex: 1;
+}
+
+.wb3d-row-flex label {
+    display: block;
+    font-size: 11px;
+    color: #646970;
+    margin-bottom: 4px;
+}
+
+.wb3d-row-flex select, 
+.wb3d-row-flex input {
+    width: 100%;
+}
+
+.wb3d-sub-options-container {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.wb3d-sub-option-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.font-mono {
+    font-family: monospace;
+}
+
+.text-gray {
+    color: #646970;
+}

@@ -1,0 +1,426 @@
+[
+  {
+    "id": "drewno-konstrukcja",
+    "name": "Drewno - Konstrukcja",
+    "type": "texture",
+    "options": [
+      {
+        "name": "Śnieg Północy (biały)",
+        "value": "textures/r01.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Teak",
+        "value": "textures/r02.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Mahoń",
+        "value": "textures/r03.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Złoty Dąb",
+        "value": "textures/r04.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Sekwoja",
+        "value": "textures/r05.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Dąb Ciemny",
+        "value": "textures/r06.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Palisander",
+        "value": "textures/r07.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Palisander Ciemny",
+        "value": "textures/r08.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Antracyt Szary",
+        "value": "textures/r09.jpg",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Noc Polarna (czarny)",
+        "value": "textures/r10.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Sosna Naturalna (bezbarwny)",
+        "value": "textures/r11.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "drewno-akcent",
+    "name": "Drewno - Akcent",
+    "type": "texture",
+    "options": [
+      {
+        "name": "Śnieg Północy (biały)",
+        "value": "textures/r01.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Teak",
+        "value": "textures/r02.jpg",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Mahoń",
+        "value": "textures/r03.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Złoty Dąb",
+        "value": "textures/r04.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Sekwoja",
+        "value": "textures/r05.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Dąb Ciemny",
+        "value": "textures/r06.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Palisander",
+        "value": "textures/r07.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Palisander Ciemny",
+        "value": "textures/r08.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Antracyt Szary",
+        "value": "textures/r09.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Noc Polarna (czarny)",
+        "value": "textures/r10.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Sosna Naturalna (bezbarwny)",
+        "value": "textures/r11.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "zdjezdzalnia",
+    "name": "Zjeżdżalnia",
+    "type": "color",
+    "options": [
+      {
+        "name": "Czerwony",
+        "value": "#e61b1f",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Niebieski",
+        "value": "#085ba9",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Zielony",
+        "value": "#094d00",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Fioletowy",
+        "value": "#9a1b7a",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Morski",
+        "value": "#107d80",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Limonkowy",
+        "value": "#bfd12d",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Antracyt",
+        "value": "#484c4f",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Żółty",
+        "value": "#f2cb02",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "plastic-deseczka",
+    "name": "Huśtawka",
+    "type": "color",
+    "options": [
+      {
+        "name": "Czerwony",
+        "value": "#e61b1f",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Niebieski",
+        "value": "#085ba9",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Zielony",
+        "value": "#094d00",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Fioletowy",
+        "value": "#9a1b7a",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Morski",
+        "value": "#107d80",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Limonkowy",
+        "value": "#bfd12d",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Antracyt",
+        "value": "#484c4f",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Żółty",
+        "value": "#f2cb02",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "plastic-orczyk",
+    "name": "Huśtawka - orczyk",
+    "type": "color",
+    "options": [
+      {
+        "name": "Czerwony",
+        "value": "#e61b1f",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Niebieski",
+        "value": "#085ba9",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Zielony",
+        "value": "#094d00",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "plastic-kubelek",
+    "name": "Huśtawka Kubełek",
+    "type": "color",
+    "options": [
+      {
+        "name": "Czerwony",
+        "value": "#e61b1f",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Niebieski",
+        "value": "#085ba9",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Zielony",
+        "value": "#00613c",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Różowy",
+        "value": "#d03d61",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Żółty",
+        "value": "#f2cb02",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Limonkowy",
+        "value": "#bfd12d",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Antracyt",
+        "value": "#484c4f",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "plastic-trapez",
+    "name": "Trapez",
+    "type": "color",
+    "options": [
+      {
+        "name": "Czerwony",
+        "value": "#e61b1f",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Niebieski",
+        "value": "#085ba9",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "drazki",
+    "name": "Drążki",
+    "type": "color",
+    "options": [
+      {
+        "name": "Czerwony",
+        "value": "#e61b1f",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Niebieski",
+        "value": "#085ba9",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Antracyt",
+        "value": "#484c4f",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "siatka",
+    "name": "Siatka",
+    "type": "texture",
+    "options": [
+      {
+        "name": "Naturalna",
+        "value": "textures/rope-1.jpg",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Czerwona",
+        "value": "textures/rope-2.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Niebieska",
+        "value": "textures/rope-3.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  },
+  {
+    "id": "climb",
+    "name": "Kamienie",
+    "type": "texture",
+    "options": [
+      {
+        "name": "Mix",
+        "value": "textures/climb-01.jpg",
+        "isDefault": true,
+        "attachmentId": ""
+      },
+      {
+        "name": "Czarne",
+        "value": "textures/climb-02.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      },
+      {
+        "name": "Antracyt",
+        "value": "textures/climb-03.jpg",
+        "isDefault": false,
+        "attachmentId": ""
+      }
+    ]
+  }
+]

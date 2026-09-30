@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wooden Boys - Jasiek - Demo 3D placu zabaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="module" src="https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <nav class="top-nav" aria-label="Gorne menu">
+        <a href="#">Produkty</a>
+        <a href="#">Realizacje</a>
+        <a href="#">Certyfikaty</a>
+      </nav>
+
+      <a href="#" class="brand" aria-label="Wooden Boys">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong>wooden boys</strong>
+          <small>plac zabaw dla kazdego</small>
+        </span>
+      </a>
+
+      <div class="top-actions">
+        <a href="#">Strefa projektanta</a>
+        <a href="#">Kontakt</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-shell">
+      <div class="viewer-col">
+        <div id="model-loader" class="model-loader">
+          <div class="spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+          </div>
+          <p>Wczytywanie modelu 3D...</p>
+        </div>
+
+        <model-viewer
+          id="playground-viewer"
+          src="wooden-boyz-jasiek.glb"
+          alt="Model placu zabaw Jasiek"
+          camera-controls
+          interaction-prompt="auto"
+          touch-action="pan-y"
+          ar
+          ar-modes="webxr scene-viewer quick-look"
+          ar-scale="fixed"
+          environment-image="neutral"
+          shadow-intensity="0.9"
+          camera-orbit="-147.3deg 93.91deg auto"
+          min-camera-orbit="auto 30deg auto"
+          max-camera-orbit="auto 95deg auto">
+
+          <button slot="ar-button" id="ar-button">Pokaz w AR</button>
+
+          <div id="ar-prompt">
+            <div class="ar-prompt-card">
+              <div class="ar-prompt-head">
+                <svg class="ar-prompt-icon" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect x="2" y="5" width="14" height="32" rx="3" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.14)"/>
+                  <circle cx="9" cy="32" r="1.5" fill="white"/>
+                  <path d="M18 21H23" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M21 18L24 21L21 24" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <rect x="25" y="12" width="15" height="20" rx="3" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.14)"/>
+                  <line x1="25" y1="17" x2="40" y2="17" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+                  <path d="M29.5 24.5H35.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div>
+                  <p class="ar-prompt-title">Szybkie ustawienie AR</p>
+                  <p class="ar-prompt-subtitle">Model placu zabaw na Twojej przestrzeni</p>
+                </div>
+              </div>
+              <ol class="ar-prompt-steps">
+                <li>Skieruj telefon na podloze i porusz nim powoli.</li>
+                <li>Poczekaj, az urzadzenie wykryje stabilna powierzchnie.</li>
+                <li>Dotknij ekran, aby osadzic model i dopasuj skale.</li>
+              </ol>
+            </div>
+          </div>
+
+          <button class="Hotspot" slot="hotspot-2" data-position="-1.2045512972853243m 2.25m -0.7214684061340351m" data-normal="0m 0.9999999999999911m 1.3435883843274954e-7m" data-visibility-attribute="visible">
+            <span class="HotspotLabel">A</span>
+            <div class="HotspotTooltip">
+              <strong>Punkt montażowy A</strong>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          </button>
+          <button class="Hotspot" slot="hotspot-3" data-position="-0.46239722080571855m 2.25m -1.2371470750189906m" data-normal="0m 0.9999999999999911m 1.3435883843274954e-7m" data-visibility-attribute="visible">
+            <span class="HotspotLabel">B</span>
+            <div class="HotspotTooltip">
+              <strong>Punkt montażowy B</strong>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          </button>
+          <button class="Hotspot" slot="hotspot-4" data-position="0.46823601397900083m 2.25m -1.23016393650974m" data-normal="0m 0.9999999999999911m 1.3435883843274954e-7m" data-visibility-attribute="visible">
+            <span class="HotspotLabel">C</span>
+            <div class="HotspotTooltip">
+              <strong>Punkt montażowy C</strong>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          </button>
+          <button class="Hotspot" slot="hotspot-5" data-position="0.5658841911662449m 2.25m 1.1862003228881348m" data-normal="0m 0.9999999999999911m 1.3435883843274954e-7m" data-visibility-attribute="visible">
+            <span class="HotspotLabel">D</span>
+            <div class="HotspotTooltip">
+              <strong>Punkt montażowy D</strong>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          </button>
+        </model-viewer>
+
+        <button class="viewer-arrow prev" onclick="prevView()" aria-label="Poprzedni widok">&#10094;</button>
+        <button class="viewer-arrow next" onclick="nextView()" aria-label="Nastepny widok">&#10095;</button>
+
+        <button id="qr-btn" onclick="openQR()">Skanuj QR</button>
+      </div>
+
+      <aside class="info-col">
+        <div class="breadcrumb">
+          <a href="#">Strona glowna</a>
+          <span>&#8250;</span>
+          <a href="#">Place zabaw</a>
+          <span>&#8250;</span>
+          <span>Jasiek</span>
+        </div>
+
+        <p class="category">Plac zabaw premium</p>
+        <h1>Jasiek - zestaw wielofunkcyjny</h1>
+        <p class="intro">
+          Modulowy zestaw dla dzieci 3-12 lat z wiezami, elementami wspinaczkowymi i linowymi.
+          Wersja demonstracyjna z dynamiczna zmiana wykonczen drewna i liny.
+        </p>
+
+        <p class="label">Wariant drewna</p>
+        <div class="swatches" id="wood-swatches">
+          <button class="swatch active" data-type="wood" data-material-name="drewno-konstrukcja" data-index="0" data-texture="../textures/wood- (1).jpg" onclick="selectSwatch(this)">
+            <span class="dot" style="--sw:#ddb27b"></span>
+            <span>Jasny Buk</span>
+          </button>
+          <button class="swatch" data-type="wood" data-material-name="drewno-konstrukcja" data-index="0" data-texture="../textures/wood- (2).jpg" onclick="selectSwatch(this)">
+            <span class="dot" style="--sw:#1f2328"></span>
+            <span>Antracytowe Drewno</span>
+          </button>
+          <button class="swatch" data-type="wood" data-material-name="drewno-konstrukcja" data-index="0" data-texture="../textures/wood- (3).jpg" onclick="selectSwatch(this)">
+            <span class="dot" style="--sw:#6a3e24"></span>
+            <span>Orzech Klasyczny</span>
+          </button>
+          <button class="swatch" data-type="wood" data-material-name="drewno-konstrukcja" data-index="0" data-texture="../textures/wood- (4).jpg" onclick="selectSwatch(this)">
+            <span class="dot" style="--sw:#bd7938"></span>
+            <span>Miodowy Dab</span>
+          </button>
+        </div>
+
+        <p class="label">Wariant liny</p>
+        <div class="swatches" id="rope-swatches">
+          <button class="swatch active" data-type="rope" data-material-name="lina" data-index="5" data-texture="../textures/rope- (1).jpg" onclick="selectSwatch(this)">
+            <span class="dot" style="--sw:#bea27c"></span>
+            <span>Piaskowa Lina</span>
+          </button>
+          <button class="swatch" data-type="rope" data-material-name="lina" data-index="5" data-texture="../textures/rope- (2).jpg" onclick="selectSwatch(this)">
+            <span class="dot" style="--sw:#2a2827"></span>
+            <span>Grafitowa Lina</span>
+          </button>
+        </div>
+
+        <div class="cta-row">
+          <button class="btn btn-primary">Popros o wycene</button>
+          <button class="btn btn-light">Pobierz karte produktu</button>
+        </div>
+
+        <ul class="details">
+          <li>Strefa bezpieczenstwa: 8.5 x 6.1 m</li>
+          <li>Wysokosc swobodnego upadku: 1.8 m</li>
+          <li>Norma: EN 1176</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="tabs-shell">
+      <div class="tabs-nav">
+        <button class="tab active" onclick="switchTab(this, 'opis')">Opis</button>
+        <button class="tab" onclick="switchTab(this, 'spec')">Specyfikacja</button>
+        <button class="tab" onclick="switchTab(this, 'materialy')">Materialy</button>
+      </div>
+
+      <div id="opis" class="tab-content active">
+        <h2>Projekt stworzony dla aktywnej zabawy</h2>
+        <p>
+          Jasiek laczy zjazd, wspinaczke i elementy linowe w jednym, kompaktowym zestawie.
+          Bryla pozostaje czytelna i atrakcyjna dla architektow oraz inwestorow publicznych.
+        </p>
+      </div>
+
+      <div id="spec" class="tab-content">
+        <div class="spec-grid">
+          <div><span>Wiek uzytkownikow</span><strong>3-12 lat</strong></div>
+          <div><span>Maks. liczba dzieci</span><strong>18</strong></div>
+          <div><span>Konstrukcja</span><strong>Stal cynkowana + drewno</strong></div>
+          <div><span>Fundamentowanie</span><strong>Kotwy prefabrykowane</strong></div>
+        </div>
+      </div>
+
+      <div id="materialy" class="tab-content">
+        <p>
+          Material 0 modelu odpowiada za drewno i korzysta z tekstur wood- (1-4).
+          Material 5 odpowiada za line i korzysta z tekstur rope- (1-2).
+          Przelaczanie dziala dynamicznie bez przeladowania modelu.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-logo">WOODEN BOYS</p>
+        <p>Producent nowoczesnych placow zabaw i stref aktywnosci.</p>
+      </div>
+      <div>
+        <p class="footer-head">Oferta</p>
+        <a href="#">Place miejskie</a>
+        <a href="#">Osiedla i deweloperzy</a>
+      </div>
+      <div>
+        <p class="footer-head">Kontakt</p>
+        <a href="tel:+48111111222">+48 111 111 222</a>
+        <a href="mailto:biuro@woodenboys.example">biuro@woodenboys.example</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="qr-modal" class="modal-overlay" onclick="closeQR(event)">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeQR()">&times;</button>
+      <p class="modal-title">Otworz demo 3D na telefonie</p>
+      <div id="qr-container"></div>
+      <ol class="qr-steps">
+        <li>Zeskanuj kod QR telefonem.</li>
+        <li>Uruchom podglad modelu.</li>
+        <li>Wyprobuj osadzenie w AR.</li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

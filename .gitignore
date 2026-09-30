@@ -1,0 +1,22 @@
+# Blender source files & backups
+*.blend
+*.blend1
+*.blend@
+
+# External raw 3D archives
+00303_OBJ/
+00303_OBJ.zip
+
+# Zip archives (ignore all except the distribution plugin zip)
+*.zip
+!dystrybucja/wooden-boyz-3d-configurator.zip
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

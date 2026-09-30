@@ -1,0 +1,175 @@
+{
+  "name": "Wooden Boyz Maja",
+  "glb_url": "/wp-content/colordrop/models/wooden-boyz-maja.glb",
+  "base_price": 3599,
+  "camera_orbit": "-45deg 80deg auto",
+  "camera_target": "0m 1m 0m",
+  "sidebar_title": "Skonfiguruj swój plac zabaw: %name%",
+  "sidebar_subtitle": "Dostosuj wybarwienie drewna, kolory akcesoriów oraz opcje wyposażenia placu zabaw.",
+  "parsed_nodes": [
+    "konstrukcja-maja",
+    "GRUPA-zjezdzalnia",
+    "GRUPA-hustawka-kubelek-b",
+    "GRUPA-hustawka-kubelek-a",
+    "GRUPA-hustawka-gniazdo-a",
+    "GRUPA-hustawka-deska-b",
+    "GRUPA-hustawka-deska-a",
+    "GRUPA-maja-podest",
+    "GRUPA-maja-piaskownica-bok",
+    "GRUPA-maja-piaskownica",
+    "GRUPA-maja-piaskownica-zamknieta",
+    "GRUPA-maja-balustrada",
+    "GRUPA-kamienie"
+  ],
+  "active_attributes": [
+    {
+      "id": "drewno-konstrukcja",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "drewno-akcent",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "zdjezdzalnia",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-deseczka",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-kubelek",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "climb",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    }
+  ],
+  "geometry_toggles": [
+    {
+      "id": 1,
+      "name": "Jednostronna poręcz schodów",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 149,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-maja-balustrada"
+    },
+    {
+      "id": 2,
+      "name": "Wyposażenie pod wieżą",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "",
+      "options": [
+        {
+          "label": "Otwarta piaskownica",
+          "value": "brak",
+          "meshId": "",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Podest w miejscu piaskownicy",
+          "value": "podest",
+          "meshId": "GRUPA-maja-podest",
+          "price": 249,
+          "isDefault": false
+        },
+        {
+          "label": "Zamykane włazy piaskownicy",
+          "value": "piaskownica",
+          "meshId": "",
+          "price": 299,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 0,
+      "enableWhen": "Wyposażenie pod wieżą",
+      "enableWhenValue": "piaskownica",
+      "nodeDefault": "GRUPA-maja-piaskownica",
+      "nodeActive": "GRUPA-maja-piaskownica-zamknieta"
+    },
+    {
+      "id": 4,
+      "name": "Huśtawka - stanowisko A",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "deska",
+          "meshId": "GRUPA-hustawka-deska-a",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "kubelek",
+          "meshId": "GRUPA-hustawka-kubelek-a",
+          "price": 0,
+          "isDefault": false
+        },
+        {
+          "label": "Bocianie gniazdo",
+          "value": "gniazdo",
+          "meshId": "GRUPA-hustawka-gniazdo-a",
+          "price": 249,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Huśtawka - stanowisko B",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "deska",
+          "meshId": "GRUPA-hustawka-deska-b",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "kubelek",
+          "meshId": "GRUPA-hustawka-kubelek-b",
+          "price": 0,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Zestaw kotw",
+      "type": "checkbox",
+      "isCosmetic": true,
+      "price": 149,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": ""
+    }
+  ]
+}

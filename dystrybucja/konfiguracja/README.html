@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrukcja Wdrożenia Konfiguratora 3D - Wooden Boyz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-hover: #1e293b;
+            --accent: #2563eb;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-heading: #0f172a;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --code-text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo-tag {
+            display: inline-block;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--text-heading);
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.006);
+        }
+
+        h2 {
+            color: var(--text-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-num {
+            background: var(--primary);
+            color: #ffffff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        h3 {
+            color: var(--text-heading);
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        ol, ul {
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-weight: 400;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .alert-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            color: #1e3a8a;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .alert-box strong {
+            color: #1d4ed8;
+        }
+
+        .folder-tree {
+            font-family: 'Fira Code', monospace;
+            background-color: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 15px 20px;
+            border-radius: 8px;
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            background-color: var(--card-bg);
+            margin-top: 60px;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            .section-card {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <span class="logo-tag">Wooden Boyz Configurator</span>
+            <h1>Instrukcja Wdrożenia i Konfiguracji</h1>
+            <p class="subtitle">Przewodnik techniczny dla deweloperów i administratorów witryny WordPress</p>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <!-- WPROWADZENIE -->
+        <div class="section-card">
+            <h2>Wprowadzenie</h2>
+            <p>Niniejsza instrukcja opisuje proces instalacji wtyczki 3D oraz szybkiego wdrożenia modeli i próbek kolorystycznych. Cała paczka dystrybucyjna podzielona jest na następujące foldery:</p>
+            <ul>
+                <li>📂 <strong><code>ftp/</code></strong> – pliki modeli 3D i tekstur, które należy skopiować na serwer FTP witryny.</li>
+                <li>📂 <strong><code>konfiguracja/</code></strong> – gotowe pliki JSON z konfiguracjami (cechy globalne, konfiguracja modelu Laura) oraz niniejsza instrukcja.</li>
+                <li>📄 <strong><code>wooden-boyz-3d-configurator.zip</code></strong> – czysta, skompilowana wtyczka WordPress gotowa do instalacji.</li>
+            </ul>
+            <div class="alert-box">
+                <strong>Ważne:</strong> Wtyczka została zaprojektowana w taki sposób, aby automatycznie integrować się wizualnie z aktywnym motywem strony (Elementor, Divi itp.). Przejmuje ona krój pisma oraz bazowe style przycisków i rozwijanych menu motywu, dzięki czemu wygląda jak natywna część sklepu.
+            </div>
+        </div>
+
+        <!-- KROK 1 -->
+        <div class="section-card">
+            <h2><span class="step-num">1</span>Wgranie zasobów na serwer FTP</h2>
+            <p>Wszystkie pliki modeli 3D (formaty <code>.glb</code> / <code>.usdz</code>) oraz ciężkie tekstury są hostowane w dedykowanym katalogu na FTP, co chroni bibliotekę mediów WordPressa przed obciążeniem.</p>
+            <ol>
+                <li>Zaloguj się na serwer FTP swojej witryny WordPress.</li>
+                <li>Przejdź do głównego katalogu WordPressa, a następnie do folderu <code>/wp-content/</code>.</li>
+                <li>Utwórz w katalogu <code>/wp-content/</code> nowy folder o nazwie <code>colordrop</code>.</li>
+                <li>Skopiuj i wgraj zawartość folderu <strong>`ftp`</strong> (podkatalogi <code>models</code> oraz <code>textures</code>) bezpośrednio do nowo utworzonego folderu <code>/wp-content/colordrop/</code>.</li>
+                <li>Upewnij się, że struktura plików na serwerze wygląda następująco:</li>
+            </ol>
+            <ul class="folder-tree">
+                <li>📂 /wp-content/colordrop/</li>
+                <li>├── 📂 models/</li>
+                <li>│&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 wooden-boyz-laura.glb</li>
+                <li>│&nbsp;&nbsp;&nbsp;&nbsp;└── (pozostałe modele 3D)</li>
+                <li>└── 📂 textures/</li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 r01.jpg</li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 rope-1.jpg</li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;└── 📂 thumbnails/</li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 r01.jpg (wycięta miniatura 64x64)</li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ...</li>
+            </ul>
+        </div>
+
+        <!-- KROK 2 -->
+        <div class="section-card">
+            <h2><span class="step-num">2</span>Instalacja i aktywacja wtyczki</h2>
+            <ol>
+                <li>Zaloguj się do panelu administratora WordPress (<code>/wp-admin/</code>).</li>
+                <li>Przejdź do sekcji <strong>Wtyczki</strong> -> <strong>Dodaj nową</strong>.</li>
+                <li>Kliknij na górze przycisk <strong>Wyślij wtyczkę na serwer</strong>.</li>
+                <li>Wybierz spakowany plik wtyczki <strong><code>wooden-boyz-3d-configurator.zip</code></strong> i kliknij <strong>Zainstaluj</strong>.</li>
+                <li>Po udanej instalacji kliknij przycisk <strong>Włącz wtyczkę</strong>.</li>
+            </ol>
+        </div>
+
+        <!-- KROK 3 -->
+        <div class="section-card">
+            <h2><span class="step-num">3</span>Konfiguracja globalna i import atrybutów</h2>
+            <p>W tym kroku powiążemy ścieżkę do serwera FTP i wgramy wszystkie dostępne kolory drewna, akcesoriów oraz rodzaje siatek.</p>
+            <ol>
+                <li>W lewym menu kokpitu WordPress kliknij na nową pozycję: <strong>Konfigurator 3D</strong> -> <strong>Cechy Globalne</strong>.</li>
+                <li>Otwórz dołączony do paczki plik <strong><code>global-attributes.json</code></strong> i skopiuj całą jego zawartość (np. skrótem Ctrl+C).</li>
+                <li>Na samej górze strony w kokpicie znajdź sekcję <strong>Kopiowanie / Importowanie biblioteki atrybutów</strong> i kliknij przycisk <strong>Wklej bibliotekę ze schowka</strong>. Wszystkie globalne cechy (kolory drewna, akcesoria, kamienie itp.) zostaną natychmiast zaimportowane.</li>
+                <li>Uzupełnij pozostałe pola formularza pod spodem:
+                    <ul>
+                        <li><strong>Bazowa ścieżka / adres URL do zasobów FTP:</strong> wpisz <code>/wp-content/colordrop/</code> (ukośniki na początku i na końcu są wymagane).</li>
+                        <li><strong>Tekst przycisku zapytania:</strong> wpisz np. <code>Wyślij zapytanie</code>.</li>
+                    </ul>
+                </li>
+                <li>Przewiń na sam dół strony i kliknij niebieski przycisk <strong>Zapisz ustawienia</strong>.</li>
+            </ol>
+        </div>
+
+        <!-- KROK 4 -->
+        <div class="section-card">
+            <h2><span class="step-num">4</span>Dodawanie i szybki import modelu z pliku JSON</h2>
+            <p>Dla każdego placu zabaw (np. Laura, Tytus) cała konfiguracja (w tym nazwa, ścieżki, cena bazowa, ustawienia kamery oraz reguły 3D) jest spakowana w jednym pliku JSON dostarczonym przez autora. Deweloperzy nie muszą uzupełniać żadnych pól ręcznie!</p>
+            <ol>
+                <li>W menu WordPress przejdź do: <strong>Konfigurator 3D</strong> -> <strong>Dodaj nowy model</strong>.</li>
+                <li>Na samej górze formularza znajdź niebieską sekcję <strong>Kopiowanie i importowanie konfiguracji (JSON)</strong>.</li>
+                <li>Wklej otrzymany kod JSON w pole tekstowe (lub kliknij przycisk <em>Wklej konfigurację ze schowka</em>).</li>
+                <li>Kliknij przycisk <strong>Wczytaj z powyższego pola JSON</strong>. Wszystkie pola formularza (nazwa, cena, linki, reguły 3D i warianty) zostaną automatycznie wypełnione!</li>
+                <li>Przewiń stronę na sam dół i kliknij zielony przycisk <strong>Zapisz model</strong>.</li>
+                <li>W tabeli modeli pojawi się nowy wiersz z unikalnym identyfikatorem modelu (np. <code>model_laura</code>).</li>
+            </ol>
+        </div>
+
+        <!-- KROK 5 -->
+        <div class="section-card">
+            <h2><span class="step-num">5</span>Osadzenie konfiguratora (Shortcode)</h2>
+            <p>Wyświetlenie konfiguratora na stronie wymaga wpisania odpowiedniego kodu shortcode z określeniem ID modelu oraz ID formularza <strong>Contact Form 7</strong>, który ma obsługiwać wysyłkę zapytań mailowych.</p>
+
+            <h3>Składnia shortcode:</h3>
+            <pre><code>[wooden_boyz_3d_configurator id="ID_MODELU" cf7_id="ID_FORMULARZA_CF7"]</code></pre>
+
+            <h3>Wyjaśnienie parametrów:</h3>
+            <ul>
+                <li><code>id</code>: Unikalne ID modelu (np. <code>model_laura</code>).</li>
+                <li><code>cf7_id</code>: ID formularza kontaktowego Contact Form 7, który ma się otworzyć w oknie popup po kliknięciu „Wyślij zapytanie”.</li>
+            </ul>
+
+            <div class="alert-box" style="background-color: #f0fdf4; border-left-color: #22c55e; color: #14532d;">
+                <strong>Przykład użycia:</strong><br>
+                Jeśli chcesz osadzić plac zabaw Laura (o identyfikatorze <code>model_laura</code>) i połączyć go z formularzem kontaktowym o ID <code>15</code>, użyj kodu:
+                <br><code>[wooden_boyz_3d_configurator id="model_laura" cf7_id="15"]</code>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 colordrop.pl. Wszystkie prawa zastrzeżone.</p>
+    </div>
+
+    <script>
+        function copyText(elementId) {
+            var text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Skopiowano kod JSON do schowka!');
+            }, function(err) {
+                alert('Nie udało się skopiować: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

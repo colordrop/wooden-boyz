@@ -1,0 +1,187 @@
+{
+  "name": "Wooden Boyz Gaja",
+  "glb_url": "/wp-content/colordrop/models/wooden-boyz-gaja.glb",
+  "base_price": 2399,
+  "camera_orbit": "-45deg 80deg auto",
+  "camera_target": "0m 1m 0m",
+  "sidebar_title": "Skonfiguruj swój plac zabaw: %name%",
+  "sidebar_subtitle": "Dostosuj wybarwienie drewna, kolory akcesoriów oraz opcje wyposażenia placu zabaw.",
+  "parsed_nodes": [
+    "GRUPA-hustawka-gniazdo-a-001",
+    "GRUPA-hustawka-deska-a-001",
+    "GRUPA-gaja-zamkniecie",
+    "GRUPA-gaja-piaskownica",
+    "GRUPA-gaja-piaskownica-zamknieta",
+    "GRUPA-gaja-podest",
+    "konstrukcja-gaja",
+    "gaja-lina",
+    "GRUPA-kamienie001",
+    "GRUPA-hustawka-kubelek001-a",
+    "GRUPA-gaja-balustrada",
+    "GRUPA-zjezdzalnia001",
+    "GRUPA-gaja-piaskownica-bok",
+    "GRUPA-hustawka-deska-b.001",
+    "GRUPA-hustawka-kubelek001-b"
+  ],
+  "active_attributes": [
+    {
+      "id": "drewno-konstrukcja",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "drewno-akcent",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "zdjezdzalnia",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-deseczka",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "plastic-kubelek",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    },
+    {
+      "id": "climb",
+      "showWhenToggle": "",
+      "showWhenValue": ""
+    }
+  ],
+  "geometry_toggles": [
+    {
+      "id": 1,
+      "name": "Tymczasowe zamknięcie ścianki wspinaczkowej",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 99,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-gaja-zamkniecie"
+    },
+    {
+      "id": 2,
+      "name": "Poręcze schodów",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 199,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": "GRUPA-gaja-balustrada"
+    },
+    {
+      "id": 3,
+      "name": "Wyposażenie pod wieżą",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "",
+      "options": [
+        {
+          "label": "Otwarta piaskownica",
+          "value": "brak",
+          "meshId": "",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Podest w miejscu piaskownicy",
+          "value": "podest",
+          "meshId": "GRUPA-gaja-podest",
+          "price": 249,
+          "isDefault": false
+        },
+        {
+          "label": "Zamykane włazy piaskownicy",
+          "value": "piaskownica",
+          "meshId": "",
+          "price": 299,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
+      "type": "checkbox",
+      "isCosmetic": false,
+      "price": 0,
+      "enableWhen": "Wyposażenie pod wieżą",
+      "enableWhenValue": "piaskownica",
+      "nodeDefault": "GRUPA-gaja-piaskownica",
+      "nodeActive": "GRUPA-gaja-piaskownica-zamknieta"
+    },
+    {
+      "id": 4,
+      "name": "Huśtawka - stanowisko A",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "deska",
+          "meshId": "GRUPA-hustawka-deska-a-001",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "kubelek",
+          "meshId": "GRUPA-hustawka-kubelek001-a",
+          "price": 0,
+          "isDefault": false
+        },
+        {
+          "label": "Bocianie gniazdo",
+          "value": "gniazdo",
+          "meshId": "GRUPA-hustawka-gniazdo-a-001",
+          "price": 249,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Huśtawka - stanowisko B",
+      "type": "select",
+      "isCosmetic": false,
+      "price": 0,
+      "disableWhen": "",
+      "options": [
+        {
+          "label": "Tradycyjna deseczka",
+          "value": "deska",
+          "meshId": "GRUPA-hustawka-deska-b.001",
+          "price": 0,
+          "isDefault": true
+        },
+        {
+          "label": "Huśtawka kubełkowa",
+          "value": "kubelek",
+          "meshId": "GRUPA-hustawka-kubelek001-b",
+          "price": 0,
+          "isDefault": false
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Zestaw kotw",
+      "type": "checkbox",
+      "isCosmetic": true,
+      "price": 199,
+      "disableWhen": "",
+      "nodeDefault": "",
+      "nodeActive": ""
+    }
+  ]
+}
