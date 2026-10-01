@@ -16,8 +16,8 @@
     "GRUPA-hustawka-deska-a",
     "GRUPA-maja-podest",
     "GRUPA-maja-piaskownica-bok",
-    "GRUPA-maja-piaskownica",
-    "GRUPA-maja-piaskownica-zamknieta",
+    "GRUPA-maja-piaskownica-animacja",
+    "GRUPA-maja-animacja",
     "GRUPA-maja-balustrada",
     "GRUPA-kamienie"
   ],
@@ -89,22 +89,11 @@
         {
           "label": "Zamykane włazy piaskownicy",
           "value": "piaskownica",
-          "meshId": "",
+          "meshId": "GRUPA-maja-piaskownica-animacja",
           "price": 299,
           "isDefault": false
         }
       ]
-    },
-    {
-      "id": 3,
-      "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
-      "type": "checkbox",
-      "isCosmetic": false,
-      "price": 0,
-      "enableWhen": "Wyposażenie pod wieżą",
-      "enableWhenValue": "piaskownica",
-      "nodeDefault": "GRUPA-maja-piaskownica",
-      "nodeActive": "GRUPA-maja-piaskownica-zamknieta"
     },
     {
       "id": 4,

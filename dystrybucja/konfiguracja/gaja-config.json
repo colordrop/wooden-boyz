@@ -10,8 +10,8 @@
     "GRUPA-hustawka-gniazdo-a-001",
     "GRUPA-hustawka-deska-a-001",
     "GRUPA-gaja-zamkniecie",
-    "GRUPA-gaja-piaskownica",
-    "GRUPA-gaja-piaskownica-zamknieta",
+    "GRUPA-gaja-piaskownica-animacja",
+    "GRUPA-gaja-animacja",
     "GRUPA-gaja-podest",
     "konstrukcja-gaja",
     "gaja-lina",
@@ -101,22 +101,11 @@
         {
           "label": "Zamykane włazy piaskownicy",
           "value": "piaskownica",
-          "meshId": "",
+          "meshId": "GRUPA-gaja-piaskownica-animacja",
           "price": 299,
           "isDefault": false
         }
       ]
-    },
-    {
-      "id": 13,
-      "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
-      "type": "checkbox",
-      "isCosmetic": false,
-      "price": 0,
-      "enableWhen": "Wyposażenie pod wieżą",
-      "enableWhenValue": "piaskownica",
-      "nodeDefault": "GRUPA-gaja-piaskownica",
-      "nodeActive": "GRUPA-gaja-piaskownica-zamknieta"
     },
     {
       "id": 4,

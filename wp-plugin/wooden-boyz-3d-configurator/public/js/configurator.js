@@ -24,6 +24,7 @@ jQuery(document).ready(function($) {
         var glbScene = null;
         var isSandboxClosed = false;
         var sandboxAnimCounter = 0;
+        var prevZamykanaPiaskownicaActive = false;
         
         // Stan lokalny dla tej instancji konfiguratora
         var clientState = {
@@ -483,7 +484,7 @@ jQuery(document).ready(function($) {
             var hasAnimSandbox = false;
             if (glbScene) {
                 glbScene.traverse(function(obj) {
-                    if (obj.name && (obj.name.toLowerCase().includes('piaskownica-animacja') || obj.name.toLowerCase().includes('nela-animacja'))) {
+                    if (obj.name && (obj.name.toLowerCase().includes('piaskownica-animacja') || obj.name.toLowerCase().includes('animacja'))) {
                         hasAnimSandbox = true;
                     }
                 });
@@ -505,7 +506,7 @@ jQuery(document).ready(function($) {
                             var label = (opt.label || '').toLowerCase();
                             var val = (opt.value || '').toLowerCase();
 
-                            if (mesh.includes('piaskownica-animacja') || mesh.includes('nela-animacja') || mesh.includes('animacja')) {
+                            if (mesh.includes('piaskownica-animacja') || mesh.includes('animacja')) {
                                 isZamykanaPiaskownicaActive = true;
                             } else if ((label.includes('zamykane') || label.includes('zamykana') || val.includes('zamykane')) &&
                                        !label.includes('otwarta') && !label.includes('otwarte') && !val.includes('otwarta')) {
@@ -525,34 +526,38 @@ jQuery(document).ready(function($) {
             }
 
             var $animToggle = $container.find('#wb3d-sandbox-anim-toggle');
+            var isAnimSandboxEligible = hasAnimSandbox && isZamykanaPiaskownicaActive && !isPodestActive;
+
             if ($animToggle.length) {
-                if (hasAnimSandbox && isZamykanaPiaskownicaActive && !isPodestActive) {
+                if (isAnimSandboxEligible) {
                     $animToggle.show();
-                    setNodeVisibilityDirect('GRUPA-nela-piaskownica-animacja', true);
-                    setNodeVisibilityDirect('GRUPA-nela-animacja', true);
                     if (glbScene) {
                         glbScene.traverse(function(obj) {
                             var n = (obj.name || '').toLowerCase();
-                            if (n.includes('piaskownica-animacja') || n.includes('nela-animacja')) {
+                            if (n.includes('piaskownica-animacja') || n.includes('animacja')) {
                                 obj.visible = true;
                             }
                         });
                     }
+                    if (!prevZamykanaPiaskownicaActive) {
+                        setTimeout(function() {
+                            setSandboxClosedState(true);
+                        }, 50);
+                    }
                 } else {
                     $animToggle.hide();
                     resetSandboxAnimation();
-                    setNodeVisibilityDirect('GRUPA-nela-piaskownica-animacja', false);
-                    setNodeVisibilityDirect('GRUPA-nela-animacja', false);
                     if (glbScene) {
                         glbScene.traverse(function(obj) {
                             var n = (obj.name || '').toLowerCase();
-                            if (n.includes('piaskownica-animacja') || n.includes('nela-animacja')) {
+                            if (n.includes('piaskownica-animacja') || n.includes('animacja')) {
                                 obj.visible = false;
                             }
                         });
                     }
                 }
             }
+            prevZamykanaPiaskownicaActive = isAnimSandboxEligible;
 
             // 4. Aplikuj widoczność dla cech kolorystycznych (atrybutów) zależnych od wariantów geometrycznych
             if (configData.activeAttributes && configData.activeAttributes.length) {
@@ -622,11 +627,11 @@ jQuery(document).ready(function($) {
                     obj.visible = isVisible;
                 }
             });
-            if (cleanTarget.includes('piaskownica-animacja') || cleanTarget.includes('nela-animacja')) {
+            if (cleanTarget.includes('piaskownica-animacja') || cleanTarget.includes('animacja')) {
                 glbScene.traverse(function(obj) {
                     if (!obj.name) return;
                     var n = obj.name.toLowerCase();
-                    if (n.includes('piaskownica-animacja') || n.includes('nela-animacja')) {
+                    if (n.includes('piaskownica-animacja') || n.includes('animacja')) {
                         obj.visible = isVisible;
                     }
                 });
@@ -942,6 +947,8 @@ jQuery(document).ready(function($) {
             $container.find('.wb3d-loader-overlay').fadeOut(300);
             
             glbScene = getScene(viewer);
+            prevZamykanaPiaskownicaActive = false;
+            resetSandboxAnimation();
 
             initializeConfiguratorState();
             renderConfiguratorUI();

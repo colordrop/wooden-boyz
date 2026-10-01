@@ -599,22 +599,11 @@
                               {
                                         "label": "Zamykane włazy piaskownicy",
                                         "value": "piaskownica",
-                                        "meshId": "",
+                                        "meshId": "GRUPA-gaja-piaskownica-animacja",
                                         "price": 299,
                                         "isDefault": false
                               }
                     ]
-          },
-          {
-                    "id": 13,
-                    "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
-                    "type": "checkbox",
-                    "isCosmetic": false,
-                    "price": 0,
-                    "enableWhen": "Wyposażenie pod wieżą",
-                    "enableWhenValue": "piaskownica",
-                    "nodeDefault": "GRUPA-gaja-piaskownica",
-                    "nodeActive": "GRUPA-gaja-piaskownica-zamknieta"
           },
           {
                     "id": 4,
@@ -728,22 +717,11 @@
                               {
                                         "label": "Zamykane włazy piaskownicy",
                                         "value": "piaskownica",
-                                        "meshId": "",
+                                        "meshId": "GRUPA-maja-piaskownica-animacja",
                                         "price": 299,
                                         "isDefault": false
                               }
                     ]
-          },
-          {
-                    "id": 3,
-                    "name": "Zamknięte włazy piaskownicy (pokrywa zamiast ławek)",
-                    "type": "checkbox",
-                    "isCosmetic": false,
-                    "price": 0,
-                    "enableWhen": "Wyposażenie pod wieżą",
-                    "enableWhenValue": "piaskownica",
-                    "nodeDefault": "GRUPA-maja-piaskownica",
-                    "nodeActive": "GRUPA-maja-piaskownica-zamknieta"
           },
           {
                     "id": 4,
@@ -1406,6 +1384,7 @@
       });
 
       resetSandboxAnimation();
+      prevZamykanaPiaskownicaActive = false;
       const animToggleWrapper = document.getElementById("sandbox-anim-toggle-wrapper");
       if (animToggleWrapper) animToggleWrapper.style.display = "none";
 
@@ -1696,11 +1675,11 @@
           obj.visible = isVisible;
         }
       });
-      if (cleanTarget.includes('piaskownica-animacja') || cleanTarget.includes('nela-animacja')) {
+      if (cleanTarget.includes('piaskownica-animacja') || cleanTarget.includes('animacja')) {
         glbScene.traverse(function(obj) {
           if (!obj.name) return;
           var n = obj.name.toLowerCase();
-          if (n.includes('piaskownica-animacja') || n.includes('nela-animacja')) {
+          if (n.includes('piaskownica-animacja') || n.includes('animacja')) {
             obj.visible = isVisible;
           }
         });
@@ -1918,8 +1897,19 @@
         });
       }
 
-      // Obsługa animowanej piaskownicy (model Nela z animowanymi włazami)
-      var hasAnimSandbox = (currentModelKey === 'nela');
+      // Obsługa animowanej piaskownicy (modele z animowanymi włazami: Nela, Maja)
+      var hasAnimSandbox = false;
+      if (glbScene) {
+        glbScene.traverse(function(obj) {
+          if (obj.name && (obj.name.toLowerCase().includes('piaskownica-animacja') || obj.name.toLowerCase().includes('animacja'))) {
+            hasAnimSandbox = true;
+          }
+        });
+      }
+      if (!hasAnimSandbox && viewer && viewer.availableAnimations && viewer.availableAnimations.length > 0) {
+        hasAnimSandbox = true;
+      }
+
       var isZamykanaPiaskownicaActive = false;
       if (activeToggles) {
         var towerToggle = activeToggles.find(function(t) { 
@@ -1946,18 +1936,37 @@
       }
 
       var animToggleWrapper = document.getElementById("sandbox-anim-toggle-wrapper");
+      var isAnimSandboxEligible = hasAnimSandbox && isZamykanaPiaskownicaActive && !isPodestActive;
       if (animToggleWrapper) {
-        if (hasAnimSandbox && isZamykanaPiaskownicaActive && !isPodestActive) {
+        if (isAnimSandboxEligible) {
           animToggleWrapper.style.display = "block";
-          setNodeVisibilityDirect("GRUPA-nela-piaskownica-animacja", true);
-          setNodeVisibilityDirect("GRUPA-nela-animacja", true);
+          if (glbScene) {
+            glbScene.traverse(function(obj) {
+              var n = (obj.name || '').toLowerCase();
+              if (n.includes('piaskownica-animacja') || n.includes('animacja')) {
+                obj.visible = true;
+              }
+            });
+          }
+          if (!prevZamykanaPiaskownicaActive) {
+            setTimeout(function() {
+              toggleSandboxAnimation(true);
+            }, 50);
+          }
         } else {
           animToggleWrapper.style.display = "none";
           resetSandboxAnimation();
-          setNodeVisibilityDirect("GRUPA-nela-piaskownica-animacja", false);
-          setNodeVisibilityDirect("GRUPA-nela-animacja", false);
+          if (glbScene) {
+            glbScene.traverse(function(obj) {
+              var n = (obj.name || '').toLowerCase();
+              if (n.includes('piaskownica-animacja') || n.includes('animacja')) {
+                obj.visible = false;
+              }
+            });
+          }
         }
       }
+      prevZamykanaPiaskownicaActive = isAnimSandboxEligible;
 
       // Warunkowa widoczność sekcji koloru deseczki, kubełka, trapezu, orczyka
       var hasAnyDeska = false;
@@ -2027,6 +2036,7 @@
 
     let isSandboxClosed = false;
     let sandboxAnimCounter = 0;
+    let prevZamykanaPiaskownicaActive = false;
 
     function handleSandboxCardClick(event) {
       if (event.target.closest('label') || event.target.id === 'sandbox-anim-checkbox') {
