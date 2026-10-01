@@ -778,10 +778,6 @@ jQuery(document).ready(function($) {
             var anims = viewer.availableAnimations || [];
             if (!anims || anims.length === 0) return;
 
-            if (!viewer.animationName && anims.length > 0) {
-                viewer.animationName = anims[0];
-            }
-
             if (typeof shouldBeClosed === "boolean") {
                 isSandboxClosed = shouldBeClosed;
                 sandboxAnimCounter = isSandboxClosed ? 1 : 0;
@@ -932,6 +928,13 @@ jQuery(document).ready(function($) {
 
         viewer.addEventListener('finished', function() {
             viewer.pause();
+        });
+
+        viewer.addEventListener('timeupdate', function() {
+            if (viewer.timeScale < 0 && viewer.currentTime <= 0.05) {
+                viewer.pause();
+                viewer.currentTime = 0;
+            }
         });
 
         // ŁADOWANIE MODELU

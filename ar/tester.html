@@ -1510,6 +1510,13 @@
       viewer.pause();
     });
 
+    viewer.addEventListener("timeupdate", () => {
+      if (viewer.timeScale < 0 && viewer.currentTime <= 0.05) {
+        viewer.pause();
+        viewer.currentTime = 0;
+      }
+    });
+
     viewer.addEventListener("load", () => {
       console.log("3D Model successfully loaded:", currentModelKey);
       resetSandboxAnimation();
@@ -2038,10 +2045,6 @@
 
       const anims = viewer.availableAnimations || [];
       if (!anims || anims.length === 0) return;
-
-      if (!viewer.animationName && anims.length > 0) {
-        viewer.animationName = anims[0];
-      }
 
       if (typeof forcedState === "boolean") {
         isSandboxClosed = forcedState;
